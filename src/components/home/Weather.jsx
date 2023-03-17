@@ -46,7 +46,6 @@ function Weather() {
                 </div>
             </div>
         </div>
-
     )
 }
 

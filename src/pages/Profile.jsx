@@ -1,16 +1,16 @@
 import React from 'react'
-import { Contact, Post, Weather, Calendar } from '@/components'
+import { Contact, Post, UserInfo, UserStat } from '@/components'
 const FRIEND = ["John", "Smith", "Anna", "Tiffany", "Andrew", "Law Shalk", "Addy", "Zeus"]
 
-function Home() {
+function Profile() {
     return (
         <>
-            <div className='fixed h-screen left-0 top-[6rem] w-[24%] px-3 text-gray-800 dark:text-gray-100 space-y-8 overflow-auto pb-32'>
-                <Weather />
-                <Calendar />
+            <div className='fixed h-screen left-0 top-[6rem] w-[25%] px-3 text-gray-800 dark:text-gray-100 space-y-8 overflow-auto pb-32'>
+                <UserInfo />
+                <UserStat />
             </div>
-            <div className='w-[56%] mx-[20%]'>
-                <div className='w-[70%] ml-[22%] space-y-10 pb-5'>
+            <div className='w-[55%] mx-[20%]'>
+                <div className='w-[70%] ml-[25%] space-y-10 pb-5'>
                     <Post />
                     <Post />
                 </div>
@@ -30,7 +30,7 @@ function Home() {
                         type="search"
                         name="Search"
                         placeholder="Search..."
-                        className="w-full py-2 pl-10 text-sm border border-gray-300 rounded-full focus:outline-none bg-gray-200 dark:bg-zinc-700 text-gray-100 focus:text-black dark:focus:text-gray-300 focus:bg-gray-300 dark:focus:bg-gray-600 focus:border-violet-400" />
+                        className="w-full py-2 pl-10 text-sm border border-gray-300 dark:border-zinc-700 rounded-full focus:outline-none bg-gray-200 dark:bg-zinc-700 text-gray-100 focus:text-black dark:focus:text-gray-300 focus:bg-gray-300 dark:focus:bg-gray-600 focus:border-violet-400" />
                 </div>
                 <div className='space-y-6'>
                     {FRIEND.map((el, i) => {
@@ -42,4 +42,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Profile

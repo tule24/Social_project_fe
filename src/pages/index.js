@@ -1,4 +1,4 @@
 import Home from "./Home"
 import Friend from "./Friend"
-
-export { Home, Friend }
+import Profile from "./Profile"
+export { Home, Friend, Profile }

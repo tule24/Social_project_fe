@@ -18,7 +18,6 @@ function Friend() {
                     )
                 })}
             </div>
-
             <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Your friend' ? 'block' : 'hidden'}`}>
                 <CardFriend />
                 <CardFriend />

@@ -56,7 +56,7 @@ function Header() {
                         <button className="header-btn"><BsBellFill /></button>
                     </Tooltip>
                     <Tooltip message={"Profile"} position={"-left-3"}>
-                        <button className="header-btn"><FaUser /></button>
+                        <Link to={'/profile'} className="header-btn"><FaUser /></Link>
                     </Tooltip>
                 </div>
                 <button className="p-4 lg:hidden">
