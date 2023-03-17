@@ -11,12 +11,12 @@ function Calendar() {
                 <h1 className='select-none font-semibold'>{months[today.month()]}, {today.year()}</h1>
                 <div className='flex gap-10 items-center'>
                     <GrFormPrevious
-                        className='w-5 h-5 cursor-pointer hover:scale-105 transition-all'
+                        className='w-5 h-5 next-btn'
                         onClick={() => setToday(today.month(today.month() - 1))}
                     />
-                    <h1 className=' cursor-pointer hover:scale-105 transition-all' onClick={() => setToday(currentDate)}>Today</h1>
+                    <h1 className='next-btn' onClick={() => setToday(currentDate)}>Today</h1>
                     <GrFormNext
-                        className='w-5 h-5 cursor-pointer hover:scale-105 transition-all'
+                        className='w-5 h-5 next-btn'
                         onClick={() => setToday(today.month(today.month() + 1))}
                     />
                 </div>

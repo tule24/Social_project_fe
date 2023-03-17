@@ -1,19 +1,18 @@
 import React from 'react'
 import { AiFillPhone, AiFillMessage } from 'react-icons/ai'
-import { VscCircleFilled, VscCircle } from 'react-icons/vsc'
-function Contact ({ el, i }){
+function Contact({ el, i }) {
     return (
         <div className='flex items-center justify-between'>
             <div className='flex items-center '>
-                <img src={`https://i.pravatar.cc/40?img=${i}`} alt="el" className='rounded-full block' />
-                <div className='flex flex-col ml-2'>
-                    <span className='font-semibold leading-tight'>{el}</span>
-                    <span className='text-gray-400 dark:text-gray-700 flex items-center leading-tight'> {i % 2 ? <VscCircleFilled color='green' /> : <VscCircle />} {i % 2 ? "online" : "offline"}</span>
+                <div className="relative flex-shrink-0">
+                    <span className={`absolute bottom-0 right-0 w-3 h-3 border rounded-full text-gray-100 border-gray-900 ${i % 2 ? 'bg-green-500' : 'bg-amber-500'}`} />
+                    <img src="https://source.unsplash.com/50x50/?portrait" alt="ava" className="w-10 h-10 border rounded-full bg-gray-500 border-gray-700" />
                 </div>
+                <span className='font-semibold ml-2'>{el}</span>
             </div>
-            <div className='flex items-center text-xl space-x-3 dark:text-gray-700 text-gray-400'>
-                <AiFillPhone className='cursor-pointer dark:hover:text-gray-300 hover:text-gray-500'/>
-                <AiFillMessage className='cursor-pointer dark:hover:text-gray-300 hover:text-gray-500'/>
+            <div className='contact-format text-xl space-x-3 '>
+                <AiFillPhone className='contact-btn' />
+                <AiFillMessage className='contact-btn' />
             </div>
         </div>
     )

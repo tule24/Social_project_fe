@@ -4,7 +4,7 @@ const FRIEND = ["John", "Smith", "Anna", "Tiffany", "Andrew", "Law Shalk", "Addy
 
 function Home() {
     return (
-        <div className='dark:bg-zinc-900 bg-gray-200 min-h-screen w-screen pt-24 px-10'>
+        <>
             <div className='fixed h-screen left-0 top-[6rem] w-[24%] px-3 text-gray-800 dark:text-gray-100 space-y-8 overflow-auto pb-32'>
                 <Weather />
                 <Calendar/>
@@ -21,7 +21,7 @@ function Home() {
                     return <Contact el={el} i={i} key={i} />
                 })}
             </div>
-        </div>
+        </>
     )
 }
 

@@ -18,7 +18,7 @@ function Header() {
         setTheme(theme === "dark" ? "" : "dark")
     }
     return (
-        <header className="py-5 px-10 bg-gray-100 dark:bg-zinc-800 dark:text-gray-100 shadow-md fixed left-0 right-0">
+        <header className="py-5 px-10 bg-gray-100 dark:bg-zinc-800 dark:text-gray-100 shadow-md fixed left-0 right-0 z-50">
             <div className="container flex justify-between items-center mx-auto">
                 <div className='flex items-center space-x-5'>
                     <Link to={'/'}>
@@ -43,20 +43,20 @@ function Header() {
                     </div>
                 </div>
                 <div className="items-center flex-shrink-0 hidden lg:flex space-x-3">
-                    <Tooltip message={"Theme"}>
-                        <button className="self-center p-3 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
+                    <Tooltip message={"Theme"} position={"-left-3"}>
+                        <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
-                    <Tooltip message={"Friends"}>
-                        <button className="self-center p-3 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><FaUserFriends /></button>
+                    <Tooltip message={"Friends"} position={"-left-3"}>
+                        <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>
                     </Tooltip>
-                    <Tooltip message={"Messenger"}>
-                        <button className="self-center p-3 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><SiMessenger /></button>
+                    <Tooltip message={"Messenger"} position={"-left-3"}>
+                        <button className="header-btn"><SiMessenger /></button>
                     </Tooltip>
-                    <Tooltip message={"Notification"}>
-                        <button className="self-center p-3 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><BsBellFill /></button>
+                    <Tooltip message={"Notification"} position={"-left-3"}>
+                        <button className="header-btn"><BsBellFill /></button>
                     </Tooltip>
-                    <Tooltip message={"Profile"}>
-                        <button className="self-center p-3 rounded-full bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><FaUser /></button>
+                    <Tooltip message={"Profile"} position={"-left-3"}>
+                        <button className="header-btn"><FaUser /></button>
                     </Tooltip>
                 </div>
                 <button className="p-4 lg:hidden">
