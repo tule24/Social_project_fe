@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import '@/styles/index.css'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 import { RouterProvider } from 'react-router-dom'
+import { SocialProvider } from '@/context'
 import router from '@/routes'
 import 'react-toastify/dist/ReactToastify.css'
 const client = new ApolloClient({
@@ -12,6 +13,8 @@ const client = new ApolloClient({
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ApolloProvider client={client}>
+    <SocialProvider>
       <RouterProvider router={router} />
+    </SocialProvider>
   </ApolloProvider>
 )

@@ -14,16 +14,16 @@ function Post() {
             <div>
                 <h2 className="mb-1 text-xl font-semibold">Nam cu platonem posidonium sanctus debitis te</h2>
                 <p className="text-sm dark:text-gray-400">Eu qualisque aliquando mel, id lorem detraxit nec, ad elit minimum pri. Illum ipsum detracto ne cum. Mundi nemore te ius, vim ad illud atqui apeirian...</p>
-                <img src="https://source.unsplash.com/random/100x100/?5" alt="" className="object-cover w-full mt-4 h-60 sm:h-96 dark:bg-gray-500" />
+                <img src="https://source.unsplash.com/random/100x100/?5" alt="" className="object-cover w-full mt-4 h-60 sm:h-96 dark:bg-gray-500 rounded-md" />
             </div>
             <hr className='border-gray-300 dark:border-gray-500'/>
             <div className="flex flex-wrap justify-between text-lg px-2">
                 <div className="flex space-x-10 dark:text-gray-400">
-                    <button className="flex items-center space-x-2">
+                    <button className="flex items-center space-x-2 cursor-pointer">
                         <AiFillLike />
                         <span>283</span>
                     </button>
-                    <button className="flex items-center space-x-2">
+                    <button className="flex items-center space-x-2 cursor-pointer">
                         <AiOutlineComment />
                         <span>283</span>
                     </button>
@@ -35,7 +35,6 @@ function Post() {
                 </div>
             </div>
         </div>
-
     )
 }
 

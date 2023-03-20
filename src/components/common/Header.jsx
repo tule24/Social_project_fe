@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { SiSocialblade, SiMessenger } from 'react-icons/si'
+import { SiSocialblade } from 'react-icons/si'
 import { BsBellFill } from 'react-icons/bs'
 import { MdLightMode, MdNightlight } from 'react-icons/md'
-import { FaUser, FaUserFriends } from 'react-icons/fa'
+import { FaUserFriends } from 'react-icons/fa'
 import { Tooltip } from '@/components'
+import { SocialContext } from '@/context'
 
 function Header() {
+    // const { userInfo: { ava }, messageRoom } = useContext(SocialContext)
+    const { setModal, modal } = useContext(SocialContext)
     const [theme, setTheme] = useState('')
     useEffect(() => {
         if (theme === 'dark') {
@@ -43,21 +46,18 @@ function Header() {
                         </div>
                     </div>
                 </div>
-                <div className="items-center flex-shrink-0 hidden lg:flex space-x-3">
+                <div className="items-center flex-shrink-0 hidden lg:flex space-x-3 relative">
                     <Tooltip message={"Theme"} position={"-left-3"}>
                         <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
                     <Tooltip message={"Friends"} position={"-left-3"}>
                         <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>
                     </Tooltip>
-                    <Tooltip message={"Messenger"} position={"-left-3"}>
-                        <button className="header-btn"><SiMessenger /></button>
-                    </Tooltip>
                     <Tooltip message={"Notification"} position={"-left-3"}>
-                        <button className="header-btn"><BsBellFill /></button>
+                        <button className="header-btn" onClick={() => setModal({ ...modal, open: true })}><BsBellFill /></button>
                     </Tooltip>
                     <Tooltip message={"Profile"} position={"-left-3"}>
-                        <Link to={'/profile'} className="header-btn"><FaUser /></Link>
+                        {/* <Link to={'/profile'}><img src={ava} alt="ava" className='w-10 rounded-full'/></Link> */}
                     </Tooltip>
                 </div>
                 <button className="p-4 lg:hidden">

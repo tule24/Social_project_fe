@@ -24,16 +24,26 @@ export const LOGIN = gql`
                 user {
                     id
                     name
+                    dob
                     email
                     ava
                     phone
                     address
                     updatedAt
-                    friendConfirm {
+                    friendList {
                         _id
                         name
                         ava
-                    }           
+                        status
+                    }   
+                    messageRoomOfUser {
+                        id
+                        users {
+                            id
+                            name
+                            ava
+                        }
+                    }        
                 }
             }
             ... on MsgResponse {

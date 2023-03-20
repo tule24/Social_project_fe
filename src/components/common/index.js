@@ -3,4 +3,6 @@ import Header from "./Header"
 import ErrorDisplay from "./ErrorDisplay"
 import LoadingSpiner from "./LoadingSpiner"
 import QueryResult from "./QueryResult"
-export { Tooltip, Header, ErrorDisplay, LoadingSpiner, QueryResult }
+import Slider from "./Slider"
+import MiniChat from "./MiniChat"
+export { Tooltip, Header, ErrorDisplay, LoadingSpiner, QueryResult, Slider, MiniChat }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import { Link, useNavigate } from 'react-router-dom'
 import { HiAtSymbol, HiFingerPrint } from 'react-icons/hi'
@@ -7,11 +7,12 @@ import { login_validate } from '@/helpers/validate'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '@/graphql'
 import { toast } from 'react-toastify'
+import { SocialContext } from '@/context'
 
 function Login() {
+    const { handleLoginSuccess } = useContext(SocialContext)
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
-    const [success, setSuccess] = useState(false)
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -39,7 +40,9 @@ function Login() {
             if (login?.__typename === 'MsgResponse') {
                 toast.error(login.message)
             } else {
-                localStorage.setItem('socialAccessToken', JSON.stringify(login.token))
+                const { token, refreshToken, user } = login
+                localStorage.setItem('socialAccessToken', JSON.stringify(token))
+                handleLoginSuccess(user)
                 navigate('/')
             }
         }

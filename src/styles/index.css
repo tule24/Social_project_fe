@@ -50,7 +50,7 @@ body {
 
 /* friend */
 .friend-card {
-  @apply rounded-lg flex flex-col items-center bg-white space-y-4 dark:text-gray-100 dark:bg-zinc-800;
+  @apply rounded-lg flex flex-col items-center bg-gray-100 space-y-4 dark:text-gray-100 dark:bg-zinc-800;
 }
 .friend-ava {
   @apply self-center flex-shrink-0 w-20 h-20 -mt-10 bg-center bg-cover rounded-full dark:bg-gray-500;
@@ -68,5 +68,5 @@ body {
   @apply dark:border-sky-400 dark:text-gray-50 text-black font-semibold border-gray-500
 }
 .friend-btn {
-  @apply py-2 border dark:border-gray-700 w-full hover:bg-gray-100 dark:hover:bg-gray-500;
+  @apply py-2 border dark:border-gray-700 w-full hover:bg-gray-200 dark:hover:bg-gray-500;
 }

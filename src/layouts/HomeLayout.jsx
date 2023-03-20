@@ -1,5 +1,5 @@
 import React from 'react'
-import { Header } from '@/components'
+import { Header, HOCModal, MiniChat } from '@/components'
 import { Outlet } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 function HomeLayout() {
@@ -9,6 +9,8 @@ function HomeLayout() {
       <div className='dark:bg-zinc-900 bg-gray-200 min-h-screen w-screen pt-24 px-10'>
         <Outlet />
       </div>
+      <HOCModal />
+      <MiniChat />
       <ToastContainer closeButton={true} position='top-right' style={{ width: "max-content" }} />
     </div>
   )
