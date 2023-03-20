@@ -1,3 +1,4 @@
 export * from './Auth'
 export * from './User'
-export * from './Home'
+export * from './Post'
+export * from './Comment'

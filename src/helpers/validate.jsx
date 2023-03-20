@@ -10,7 +10,7 @@ export const login_validate = (values) => {
     // validation for password
     if (!values.password) {
         errors.password = "Required";
-    } else if (values.password.length < 8 || values.password.length > 20) {
+    } else if (values.password.length < 4 || values.password.length > 20) {
         errors.password = "Must be greater then 8 and less then 20 characters long";
     } else if (values.password.includes(" ")) {
         errors.password = "Invalid Password";

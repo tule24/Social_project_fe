@@ -19,7 +19,7 @@ export default createBrowserRouter([
         ]
     },
     {
-        // element: <ProtectedRoute />,
+        element: <ProtectedRoute />,
         children: [
             {
                 path: '/',

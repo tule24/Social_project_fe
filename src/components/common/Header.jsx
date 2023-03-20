@@ -5,6 +5,7 @@ import { BsBellFill } from 'react-icons/bs'
 import { MdLightMode, MdNightlight } from 'react-icons/md'
 import { FaUser, FaUserFriends } from 'react-icons/fa'
 import { Tooltip } from '@/components'
+
 function Header() {
     const [theme, setTheme] = useState('')
     useEffect(() => {

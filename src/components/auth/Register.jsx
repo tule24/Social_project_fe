@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom'
 import styles from '@/styles/Form.module.css'
 import { HiOutlineUser, HiAtSymbol, HiFingerPrint } from 'react-icons/hi'
 import { registerValidate } from '@/helpers/validate'
+import { useMutation } from '@apollo/client'
+import { REGISTER } from '@/graphql'
+import { toast } from 'react-toastify'
 
 function Register() {
     const [show, setShow] = useState({ password: false, cpassword: false })
@@ -15,12 +18,31 @@ function Register() {
             cpassword: ''
         },
         validate: registerValidate,
-        onSubmit
+        onSubmit: async (values) => {
+            register({
+                variables: {
+                    registerInput: values
+                }
+            })
+        }
     })
 
-    async function onSubmit(values) {
-        console.log(values)
-    }
+    const [register, { data, loading, error }] = useMutation(REGISTER)
+
+    useEffect(() => {
+        error && toast.error(error.message)
+    }, [error])
+
+    useEffect(() => {
+        if (data) {
+            const { login } = data
+            if (login?.__typename === 'MsgResponse') {
+                toast.error(login.message)
+            } else {
+                navigate('/login')
+            }
+        }
+    }, [data])
 
     return (
         <section className='w-3/4 mx-auto flex flex-col gap-10'>

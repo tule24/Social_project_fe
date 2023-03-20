@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import styles from '@/styles/AuthLayout.module.css'
-
+import { ToastContainer } from 'react-toastify'
 function AuthLayout() {
     return (
         <div className='w-screen h-screen bg-blue-400 flex items-center justify-center'>
@@ -17,6 +17,7 @@ function AuthLayout() {
                     </div>
                 </div>
             </div>
+            <ToastContainer closeButton={true} position='top-right' style={{ width: "max-content" }} />
         </div>
     )
 }

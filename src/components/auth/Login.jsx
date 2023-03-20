@@ -1,24 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { HiAtSymbol, HiFingerPrint } from 'react-icons/hi'
 import styles from '@/styles/Form.module.css'
 import { login_validate } from '@/helpers/validate'
+import { useMutation } from '@apollo/client'
+import { LOGIN } from '@/graphql'
+import { toast } from 'react-toastify'
 
 function Login() {
+    const navigate = useNavigate()
     const [show, setShow] = useState(false)
+    const [success, setSuccess] = useState(false)
     const formik = useFormik({
         initialValues: {
             email: '',
             password: ''
         },
         validate: login_validate,
-        onSubmit
+        onSubmit: async (values) => {
+            login({
+                variables: {
+                    loginInput: values
+                }
+            })
+        }
     })
 
-    async function onSubmit(values) {
-        console.log(values)
-    }
+    const [login, { data, loading, error }] = useMutation(LOGIN)
+
+    useEffect(() => {
+        error && toast.error(error.message)
+    }, [error])
+
+    useEffect(() => {
+        if (data) {
+            const { login } = data
+            if (login?.__typename === 'MsgResponse') {
+                toast.error(login.message)
+            } else {
+                localStorage.setItem('socialAccessToken', JSON.stringify(login.token))
+                navigate('/')
+            }
+        }
+    }, [data])
 
     return (
         <section className='w-3/4 mx-auto flex flex-col gap-10'>
