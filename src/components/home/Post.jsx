@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { AiFillLike, AiOutlineLike, AiOutlineComment } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
+import { PostModal } from '@/components'
+import { SocialContext } from '@/context'
+
 function Post() {
+    // const { setModal, modal } = useContext(SocialContext)
     return (
         <div className="flex flex-col w-full p-6 space-y-5 overflow-hidden rounded-lg my-shadow dark:bg-zinc-800 dark:text-gray-100">
             <div className="flex space-x-4">
@@ -16,14 +20,14 @@ function Post() {
                 <p className="text-sm dark:text-gray-400">Eu qualisque aliquando mel, id lorem detraxit nec, ad elit minimum pri. Illum ipsum detracto ne cum. Mundi nemore te ius, vim ad illud atqui apeirian...</p>
                 <img src="https://source.unsplash.com/random/100x100/?5" alt="" className="object-cover w-full mt-4 h-60 sm:h-96 dark:bg-gray-500 rounded-md" />
             </div>
-            <hr className='border-gray-300 dark:border-gray-500'/>
+            <hr className='border-gray-300 dark:border-gray-500' />
             <div className="flex flex-wrap justify-between text-lg px-2">
                 <div className="flex space-x-10 dark:text-gray-400">
                     <button className="flex items-center space-x-2 cursor-pointer">
                         <AiFillLike />
                         <span>283</span>
                     </button>
-                    <button className="flex items-center space-x-2 cursor-pointer">
+                    <button className="flex items-center space-x-2 cursor-pointer" onClick={() => setModal({ ...modal, open: true, component: <PostModal /> })}>
                         <AiOutlineComment />
                         <span>283</span>
                     </button>

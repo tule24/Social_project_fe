@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 const ProtectedRoute = () => {
     const navigate = useNavigate()
     useEffect(() => {
-        if (!localStorage.getItem('socialAccessToken')) {
+        if (!localStorage.getItem('accessToken')) {
             navigate('/login')
         }
     }, [])

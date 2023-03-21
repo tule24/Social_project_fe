@@ -27,7 +27,7 @@ body {
 
 /* tooltip */
 .tooltip {
-  @apply absolute top-12 rounded dark:bg-gray-500 bg-black bg-opacity-50 p-2 text-xs text-white hidden group-hover:block;
+  @apply absolute top-12 rounded dark:bg-gray-500 bg-black bg-opacity-50 p-2 text-xs text-white w-max hidden group-hover:block;
 }
 
 /* header */

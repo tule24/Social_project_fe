@@ -1,32 +1,17 @@
-import React, { useState } from 'react'
-import { useFormik } from 'formik'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from '@/styles/Form.module.css'
-import { HiOutlineUser, HiAtSymbol, HiFingerPrint } from 'react-icons/hi'
-import { registerValidate } from '@/helpers/validate'
+import { HiOutlineUser, HiOutlineMail, HiFingerPrint } from 'react-icons/hi'
 import { useMutation } from '@apollo/client'
 import { REGISTER } from '@/graphql'
 import { toast } from 'react-toastify'
+import { Form, Formik } from 'formik'
+import * as Yup from 'yup'
+import { MyTextInput } from '@/components'
 
 function Register() {
+    const navigate = useNavigate()
     const [show, setShow] = useState({ password: false, cpassword: false })
-    const formik = useFormik({
-        initialValues: {
-            username: '',
-            email: '',
-            password: '',
-            cpassword: ''
-        },
-        validate: registerValidate,
-        onSubmit: async (values) => {
-            register({
-                variables: {
-                    registerInput: values
-                }
-            })
-        }
-    })
-
     const [register, { data, loading, error }] = useMutation(REGISTER)
 
     useEffect(() => {
@@ -40,6 +25,7 @@ function Register() {
                 toast.error(login.message)
             } else {
                 navigate('/login')
+                toast.success('Register success. Login with new account')
             }
         }
     }, [data])
@@ -49,65 +35,75 @@ function Register() {
             <div className="title">
                 <h1 className='text-gray-800 text-5xl font-bold py-4'>Register</h1>
             </div>
-            <form className='flex flex-col gap-5' onSubmit={formik.handleSubmit}>
-                <div className={styles.input_group}>
-                    <input
-                        type="text"
-                        name='Username'
+            <Formik
+                initialValues={{
+                    name: '',
+                    email: '',
+                    password: '',
+                    cpassword: ''
+                }}
+                validationSchema={Yup.object({
+                    name: Yup.string()
+                        .required('Required')
+                        .min(6, "Min length 6"),
+                    email: Yup.string()
+                        .required('Required')
+                        .email('Invalid email'),
+                    password: Yup.string()
+                        .required('Required')
+                        .min(6, "Min length 6"),
+                    cpassword: Yup.string()
+                        .oneOf([Yup.ref('password'), null], 'Passwords not match')
+                })}
+                onSubmit={async (values, { setSubmitting }) => {
+                    delete values.cpassword
+                    register({
+                        variables: {
+                            registerInput: values
+                        }
+                    })
+                }}
+            >
+                <Form className='flex flex-col gap-3' >
+                    <MyTextInput
                         placeholder='Username'
-                        className={styles.input_text}
-                        {...formik.getFieldProps('username')}
+                        name="name"
+                        type="text"
+                        IconComp={<span className='icon flex items-center px-4'>
+                            <HiOutlineUser size={25} />
+                        </span>}
                     />
-                    <span className='icon flex items-center px-4'>
-                        <HiOutlineUser size={25} />
-                    </span>
-                </div>
-                {formik.errors.username && formik.touched.username ? <span className='text-rose-500'>{formik.errors.username}</span> : <></>}
-                <div className={styles.input_group}>
-                    <input
-                        type="email"
-                        name='email'
+                    <MyTextInput
                         placeholder='Email'
-                        className={styles.input_text}
-                        {...formik.getFieldProps('email')}
+                        name="email"
+                        type="text"
+                        IconComp={<span className='icon flex items-center px-4'>
+                            <HiOutlineMail size={25} className='text-gray-300' />
+                        </span>}
                     />
-                    <span className='icon flex items-center px-4'>
-                        <HiAtSymbol size={25} />
-                    </span>
-                </div>
-                {formik.errors.email && formik.touched.email ? <span className='text-rose-500'>{formik.errors.email}</span> : <></>}
-                <div className={styles.input_group}>
-                    <input
-                        type={`${show.password ? "text" : "password"}`}
-                        name='password'
+                    <MyTextInput
                         placeholder='Password'
-                        className={styles.input_text}
-                        {...formik.getFieldProps('password')}
+                        name="password"
+                        type={`${show.password ? "text" : "password"}`}
+                        IconComp={<span className='icon flex items-center px-4 cursor-pointer' onClick={() => setShow({ ...show, password: !show.password })}>
+                            <HiFingerPrint size={25} className='text-gray-300 hover:text-blue-400' />
+                        </span>}
                     />
-                    <span className='icon flex items-center px-4' onClick={() => setShow({ ...show, password: !show.password })}>
-                        <HiFingerPrint size={25} />
-                    </span>
-                </div>
-                {formik.errors.password && formik.touched.password ? <span className='text-rose-500'>{formik.errors.password}</span> : <></>}
-                <div className={styles.input_group}>
-                    <input
-                        type={`${show.cpassword ? "text" : "password"}`}
-                        name='cpassword'
+                    <MyTextInput
                         placeholder='Confirm Password'
-                        className={styles.input_text}
-                        {...formik.getFieldProps('cpassword')}
+                        name="cpassword"
+                        type={`${show.cpassword ? "text" : "password"}`}
+                        IconComp={<span className='icon flex items-center px-4 cursor-pointer' onClick={() => setShow({ ...show, cpassword: !show.cpassword })}>
+                            <HiFingerPrint size={25} className='text-gray-300 hover:text-blue-400' />
+                        </span>}
                     />
-                    <span className='icon flex items-center px-4' onClick={() => setShow({ ...show, cpassword: !show.cpassword })}>
-                        <HiFingerPrint size={25} />
-                    </span>
-                </div>
-                {formik.errors.cpassword && formik.touched.cpassword ? <span className='text-rose-500'>{formik.errors.cpassword}</span> : <></>}
-                <div className="input-button">
-                    <button type='submit' className={styles.button}>
-                        Register
-                    </button>
-                </div>
-            </form>
+                    <div className="input-button">
+                        <button type='submit' className={styles.button}>
+                            Register
+                        </button>
+                    </div>
+                </Form>
+            </Formik>
             <p className='text-center text-gray-400 '>
                 Have an account? <Link to={'/login'}><span className='text-blue-700'>Sign In</span></Link>
             </p>

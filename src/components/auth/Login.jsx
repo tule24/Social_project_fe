@@ -1,33 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useFormik } from 'formik'
 import { Link, useNavigate } from 'react-router-dom'
-import { HiAtSymbol, HiFingerPrint } from 'react-icons/hi'
-import styles from '@/styles/Form.module.css'
-import { login_validate } from '@/helpers/validate'
+import { HiOutlineMail, HiFingerPrint } from 'react-icons/hi'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '@/graphql'
 import { toast } from 'react-toastify'
+import { Form, Formik } from 'formik'
+import * as Yup from 'yup'
 import { SocialContext } from '@/context'
+import styles from '@/styles/Form.module.css'
+import { MyTextInput } from '@/components'
 
 function Login() {
     const { handleLoginSuccess } = useContext(SocialContext)
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            password: ''
-        },
-        validate: login_validate,
-        onSubmit: async (values) => {
-            login({
-                variables: {
-                    loginInput: values
-                }
-            })
-        }
-    })
-
     const [login, { data, loading, error }] = useMutation(LOGIN)
 
     useEffect(() => {
@@ -41,7 +27,7 @@ function Login() {
                 toast.error(login.message)
             } else {
                 const { token, refreshToken, user } = login
-                localStorage.setItem('socialAccessToken', JSON.stringify(token))
+                localStorage.setItem('accessToken', JSON.stringify(token))
                 handleLoginSuccess(user)
                 navigate('/')
             }
@@ -53,39 +39,50 @@ function Login() {
             <div className="title">
                 <h1 className='text-gray-800 text-5xl font-extrabold py-4 tracking-wide'>Login</h1>
             </div>
-            <form className='flex flex-col gap-3' onSubmit={formik.handleSubmit}>
-                <div className={styles.input_group}>
-                    <input
-                        type="email"
-                        name='email'
+            <Formik
+                initialValues={{
+                    email: '',
+                    password: ''
+                }}
+                validationSchema={Yup.object({
+                    email: Yup.string()
+                        .required('Required')
+                        .email('Invalid email'),
+                    password: Yup.string()
+                        .required('Required')
+                })}
+                onSubmit={async (values, { setSubmitting }) => {
+                    login({
+                        variables: {
+                            loginInput: values
+                        }
+                    })
+                }}
+            >
+                <Form className='flex flex-col gap-3' >
+                    <MyTextInput
                         placeholder='Email'
-                        className={styles.input_text}
-                        {...formik.getFieldProps('email')}
+                        name="email"
+                        type="text"
+                        IconComp={<span className='icon flex items-center px-4 '>
+                            <HiOutlineMail size={25} className='text-gray-300' />
+                        </span>}
                     />
-                    <span className='icon flex items-center px-4'>
-                        <HiAtSymbol size={25} />
-                    </span>
-                </div>
-                {formik.errors.email && formik.touched.email ? <span className='text-rose-500'>{formik.errors.email}</span> : <></>}
-                <div className={styles.input_group}>
-                    <input
-                        type={`${show ? "text" : "password"}`}
-                        name='password'
+                    <MyTextInput
                         placeholder='Password'
-                        className={styles.input_text}
-                        {...formik.getFieldProps('password')}
+                        name="password"
+                        type={`${show ? "text" : "password"}`}
+                        IconComp={<span className='icon flex items-center px-4 cursor-pointer' onClick={() => setShow(!show)}>
+                            <HiFingerPrint size={25} className='text-gray-300 hover:text-blue-400' />
+                        </span>}
                     />
-                    <span className='icon flex items-center px-4' onClick={() => setShow(!show)}>
-                        <HiFingerPrint size={25} />
-                    </span>
-                </div>
-                {formik.errors.password && formik.touched.password ? <span className='text-rose-500'>{formik.errors.password}</span> : <></>}
-                <div className="input-button">
-                    <button type='submit' className={styles.button}>
-                        Login
-                    </button>
-                </div>
-            </form>
+                    <div className="input-button">
+                        <button type='submit' className={styles.button}>
+                            Login
+                        </button>
+                    </div>
+                </Form>
+            </Formik>
             <p className='text-center text-gray-400 '>
                 Don't have an account yet? <Link to={'/register'}><span className='text-blue-700'>Sign Up</span></Link>
             </p>

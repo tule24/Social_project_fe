@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SiSocialblade } from 'react-icons/si'
-import { BsBellFill } from 'react-icons/bs'
+import { BsBellFill, BsPencilSquare } from 'react-icons/bs'
 import { MdLightMode, MdNightlight } from 'react-icons/md'
-import { FaUserFriends } from 'react-icons/fa'
+import { FaUserFriends, FaUser } from 'react-icons/fa'
 import { Tooltip } from '@/components'
 import { SocialContext } from '@/context'
+import { CreatePost } from '@/components'
 
 function Header() {
-    // const { userInfo: { ava }, messageRoom } = useContext(SocialContext)
-    const { setModal, modal } = useContext(SocialContext)
+    const { userInfo, setModal, modal } = useContext(SocialContext)
+    const ava = userInfo ? userInfo.ava : ""
     const [theme, setTheme] = useState('')
     useEffect(() => {
         if (theme === 'dark') {
@@ -50,14 +51,17 @@ function Header() {
                     <Tooltip message={"Theme"} position={"-left-3"}>
                         <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
+                    <Tooltip message={"Create Post"} position={"-left-5"}>
+                        <button className="header-btn" onClick={() => setModal({ ...modal, open: true, component: <CreatePost user={userInfo} modal={modal} setModal={setModal}/> })}><BsPencilSquare /></button>
+                    </Tooltip>
                     <Tooltip message={"Friends"} position={"-left-3"}>
                         <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>
                     </Tooltip>
                     <Tooltip message={"Notification"} position={"-left-3"}>
                         <button className="header-btn" onClick={() => setModal({ ...modal, open: true })}><BsBellFill /></button>
                     </Tooltip>
-                    <Tooltip message={"Profile"} position={"-left-3"}>
-                        {/* <Link to={'/profile'}><img src={ava} alt="ava" className='w-10 rounded-full'/></Link> */}
+                    <Tooltip message={"Profile"} position={"-left-1"}>
+                        <Link to={'/profile'}>{ava ? <img src={ava} alt="ava" className='w-10 rounded-full' /> : <FaUser />}</Link>
                     </Tooltip>
                 </div>
                 <button className="p-4 lg:hidden">
@@ -65,8 +69,8 @@ function Header() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-            </div>
-        </header>
+            </div >
+        </header >
     )
 }
 

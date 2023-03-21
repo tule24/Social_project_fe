@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { AiFillLike, AiOutlineCloseCircle, AiOutlineComment, AiOutlineFileAdd } from 'react-icons/ai'
+import { AiFillLike, AiOutlineCloseCircle, AiOutlineClose, AiOutlineComment, AiOutlineFileAdd } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
 import { FaUsers, FaUserLock } from 'react-icons/fa'
 import uploadImg from '@/assets/upload.png'
@@ -9,23 +9,19 @@ import 'react-quill/dist/quill.snow.css'
 import parse from 'html-react-parser'
 import { useDropzone } from 'react-dropzone'
 
-const images = [
-  'https://images.unsplash.com/photo-1531297484001-80022131f5a1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2620&q=80',
-  'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80',
-  'https://images.unsplash.com/photo-1661961112951-f2bfd1f253ce?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2672&q=80',
-  'https://images.unsplash.com/photo-1512756290469-ec264b7fbf87?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2253&q=80',
-  'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2671&q=80'
-]
-function CreatePost() {
+function CreatePost({ user, modal, setModal }) {
   const [value, setValue] = useState('')
-  const [fileURL, setFileURL] = useState([])
-  const [url, setURL] = useState([])
+  const [files, setFiles] = useState([])
   const [vision, setVision] = useState('public')
 
+  const removeImage = (fileName) => {
+    const newFiles = files.filter(el => el.file.name !== fileName)
+    console.log(newFiles)
+    setFiles([...newFiles])
+  }
   const onDrop = useCallback(async (acceptedFile) => {
-    setFileURL([...fileURL, acceptedFile[0]])
     const newURL = URL.createObjectURL(acceptedFile[0])
-    setURL([...url, newURL])
+    setFiles([...files, { file: acceptedFile[0], url: newURL }])
   })
   const { getInputProps, getRootProps } = useDropzone({
     onDrop,
@@ -35,7 +31,7 @@ function CreatePost() {
   })
 
   useEffect(() => {
-    return () => url.forEach(el => URL.revokeObjectURL(el))
+    return () => files.forEach(el => URL.revokeObjectURL(el.url))
   }, [])
 
   return (
@@ -49,7 +45,7 @@ function CreatePost() {
           </div>
           <div className='space-y-2'>
             <h1 className='text-xl font-semibold'>Media</h1>
-            <div {...getRootProps()}>
+            <div {...getRootProps()} className='cursor-pointer'>
               <input {...getInputProps()} />
               <div className='w-full flex flex-col items-center justify-center space-y-2 py-5 rounded-lg border-2 border-dashed border-gray-400'>
                 <p>JPG, PNG, WEBM, MAX 100MB</p>
@@ -59,6 +55,14 @@ function CreatePost() {
                 <p>Drag & drop file</p>
                 <p>or Browse media on your device</p>
               </div>
+            </div>
+            <div className='flex flex-wrap space-x-2'>
+              {files.map((el, i) => {
+                return <div className='flex items-center space-x-1 p-1 rounded-lg bg-gray-100' key={i}>
+                  <span>{el.file.name}</span>
+                  <button onClick={() => removeImage(el.file.name)}><AiOutlineClose /></button>
+                </div>
+              })}
             </div>
           </div>
           <div className='space-y-2'>
@@ -81,19 +85,21 @@ function CreatePost() {
       </div>
       <div className='bg-gray-200 overflow-auto border-l-2 border-gray-300'>
         <div className="flex flex-col w-full h-full p-6 space-y-5 rounded-lg dark:bg-zinc-800 dark:text-gray-100 overflow-auto">
-          <div className='flex justify-between items-start h-[10%]'>
+          <div className='flex justify-between items-start h-[8%]'>
             <div className="flex space-x-4">
-              <img alt="" src="https://source.unsplash.com/100x100/?portrait" className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
+              <img alt="" src={user.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
               <div className="flex flex-col space-y-1">
-                <a rel="noopener noreferrer" href="#" className="text-sm font-semibold">Leroy Jenkins</a>
+                <span className="text-sm font-semibold capitalize">{user.name}</span>
                 <span className="text-xs dark:text-gray-400">Just now</span>
               </div>
             </div>
             <button onClick={() => setModal({ ...modal, open: false })}><AiOutlineCloseCircle size={30} /></button>
           </div>
-          <div className='overflow-auto h-[80%]'>
-            {parse(value)}
-            {url.length ? <Slider images={url} /> : ""}
+          <div className='overflow-auto h-[82%]'>
+            <div className='my-2 w-full break-words'>
+              {parse(value)}
+            </div>
+            {files.length ? <Slider images={files.map(el => el.url)} /> : ""}
           </div>
           <div className="flex flex-wrap justify-between text-lg px-2 h-[10%] border-t border-gray-300">
             <div className="flex space-x-10 dark:text-gray-400">

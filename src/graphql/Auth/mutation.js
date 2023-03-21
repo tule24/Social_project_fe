@@ -29,7 +29,6 @@ export const LOGIN = gql`
                     ava
                     phone
                     address
-                    updatedAt
                     friendList {
                         _id
                         name
