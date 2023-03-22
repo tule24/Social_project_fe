@@ -20,13 +20,8 @@ function Register() {
 
     useEffect(() => {
         if (data) {
-            const { login } = data
-            if (login?.__typename === 'MsgResponse') {
-                toast.error(login.message)
-            } else {
-                navigate('/login')
-                toast.success('Register success. Login with new account')
-            }
+            navigate('/login')
+            toast.success('Register success. Login with new account')
         }
     }, [data])
 

@@ -11,7 +11,7 @@ import styles from '@/styles/Form.module.css'
 import { MyTextInput } from '@/components'
 
 function Login() {
-    const { handleLoginSuccess } = useContext(SocialContext)
+    const { setUserInfo } = useContext(SocialContext)
     const navigate = useNavigate()
     const [show, setShow] = useState(false)
     const [login, { data, loading, error }] = useMutation(LOGIN)
@@ -23,14 +23,10 @@ function Login() {
     useEffect(() => {
         if (data) {
             const { login } = data
-            if (login?.__typename === 'MsgResponse') {
-                toast.error(login.message)
-            } else {
-                const { token, refreshToken, user } = login
-                localStorage.setItem('accessToken', JSON.stringify(token))
-                handleLoginSuccess(user)
-                navigate('/')
-            }
+            const { token, refreshToken, user } = login
+            localStorage.setItem('accessToken', JSON.stringify(token))
+            setUserInfo(user)
+            navigate('/')
         }
     }, [data])
 

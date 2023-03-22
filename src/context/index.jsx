@@ -9,9 +9,8 @@ const sample = {
         name: "peter",
         phone: "058456789"
     },
-    friendList: {
+    friendConfirm: {
         confirm: [
-            { _id: '64177c29b525c87703db7977', name: 'anna', ava: 'https://i.pravatar.cc/?img=49', status: 'confirm', __typename: 'Friend' }
         ],
         waiting: [
             { _id: '64177c74b525c87703db797c', name: 'john', ava: 'https://i.pravatar.cc/?img=14', status: 'waiting', __typename: 'Friend' },
@@ -37,57 +36,22 @@ const sample = {
 }
 export const SocialContext = createContext()
 export const SocialProvider = (({ children }) => {
-    const [userInfo, setUserInfo] = useState(sample.userInfo)
-    const [friendList, setFriendList] = useState(sample.friendList)
-    const [messageRoom, setMessageRoom] = useState(sample.messageRoom)
+    const [userInfo, setUserInfo] = useState()
     const [miniChat, setMiniChat] = useState([])
     const [modal, setModal] = useState({
         open: false,
         component: ""
     })
 
-    const handleLoginSuccess = (user) => {
-        const { friendList, messageRoomOfUser, ...userInfo } = user
-        console.log(friendList)
-        console.log(messageRoomOfUser)
-        console.log(userInfo)
-        const confirm = []
-        const waiting = []
-        const request = []
-        friendList.forEach(el => {
-            if (el.status === 'confirm') {
-                confirm.push(el)
-            } else if (el.status === 'waiting') {
-                waiting.push(el)
-            } else {
-                request.push(el)
-            }
-        })
-        const formatMsgRoom = messageRoomOfUser.map(el => {
-            const user = el.users.filter(u => u.id !== userInfo.id)
-            return {
-                id: el.id,
-                user,
-                message: []
-            }
-        })
-
-        setUserInfo({ ...userInfo })
-        setFriendList({ confirm: [...confirm], waiting: [...waiting], request: [...request] })
-        setMessageRoom([...formatMsgRoom])
-    }
-
     return (
         <SocialContext.Provider
             value={{
                 userInfo,
-                friendList,
-                messageRoom,
                 modal,
                 miniChat,
-                setMiniChat,
+                setUserInfo,
                 setModal,
-                handleLoginSuccess
+                setMiniChat
             }}>
             {children}
         </SocialContext.Provider>

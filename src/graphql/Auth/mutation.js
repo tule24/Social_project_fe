@@ -3,14 +3,7 @@ import { gql } from '@apollo/client'
 export const REGISTER = gql`
     mutation Mutation($registerInput: registerInput!) {
         register(registerInput: $registerInput) {
-            ... on User {
-                id
-                createdAt
-            }
-            ... on MsgResponse {
-                code
-                message
-            }
+            id
         }
     }
 `
@@ -18,46 +11,26 @@ export const REGISTER = gql`
 export const LOGIN = gql`
     mutation Mutation($loginInput: loginInput!) {
         login(loginInput: $loginInput) {
-            ... on Auth {
-                token
-                refreshToken
-                user {
+            user {
+                id
+                ava
+                messageRoomOfUser {
                     id
-                    name
-                    dob
-                    email
-                    ava
-                    phone
-                    address
-                    friendList {
-                        _id
+                    users {
+                        id
                         name
                         ava
-                        status
-                    }   
-                    messageRoomOfUser {
-                        id
-                        users {
-                            id
-                            name
-                            ava
-                        }
-                    }        
+                    }
                 }
             }
-            ... on MsgResponse {
-                code
-                message
-            }
+            token
+            refreshToken
         }
     }
 `
 
 export const LOGOUT = gql`
     mutation Mutation {
-        logout {
-        code
-        message
-        }
+        logout
     }
 `

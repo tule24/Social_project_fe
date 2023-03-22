@@ -7,11 +7,15 @@ import { FaUserFriends, FaUser } from 'react-icons/fa'
 import { Tooltip } from '@/components'
 import { SocialContext } from '@/context'
 import { CreatePost } from '@/components'
+import { GET_AVA } from '@/graphql'
+import { useQuery } from '@apollo/client'
 
 function Header() {
-    const { userInfo, setModal, modal } = useContext(SocialContext)
-    const ava = userInfo ? userInfo.ava : ""
+    const { loading, error, data } = useQuery(GET_AVA)
+    const [ava, setAva] = useState("")
+    const { setModal, modal } = useContext(SocialContext)
     const [theme, setTheme] = useState('')
+
     useEffect(() => {
         if (theme === 'dark') {
             document.documentElement.classList.add('dark')
@@ -19,6 +23,11 @@ function Header() {
             document.documentElement.classList.remove('dark')
         }
     }, [theme])
+    useEffect(() => {
+        if (data && data.user) {
+            setAva(data.user.ava)
+        }
+    }, [data])
     const changeTheme = () => {
         setTheme(theme === "dark" ? "" : "dark")
     }
@@ -52,7 +61,7 @@ function Header() {
                         <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
                     <Tooltip message={"Create Post"} position={"-left-5"}>
-                        <button className="header-btn" onClick={() => setModal({ ...modal, open: true, component: <CreatePost user={userInfo} modal={modal} setModal={setModal}/> })}><BsPencilSquare /></button>
+                        <button className="header-btn" onClick={() => setModal({ ...modal, open: true, component: <CreatePost user={userInfo} modal={modal} setModal={setModal} /> })}><BsPencilSquare /></button>
                     </Tooltip>
                     <Tooltip message={"Friends"} position={"-left-3"}>
                         <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>

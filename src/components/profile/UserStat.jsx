@@ -1,6 +1,6 @@
 import React from 'react'
 import { BiFile, BiGroup } from 'react-icons/bi'
-function UserStat({ totalFriend }) {
+function UserStat({ user }) {
     return (
         <div className='space-y-5'>
             <div className="flex overflow-hidden rounded-lg dark:text-gray-100 dark:bg-zinc-800 my-shadow">
@@ -8,7 +8,7 @@ function UserStat({ totalFriend }) {
                     <BiGroup />
                 </div>
                 <div className="flex items-center justify-between flex-1 p-3">
-                    <p className="text-2xl font-semibold">{totalFriend}</p>
+                    <p className="text-2xl font-semibold">{user?.totalFriend}</p>
                     <p>Friends</p>
                 </div>
             </div>
@@ -17,7 +17,7 @@ function UserStat({ totalFriend }) {
                     <BiFile />
                 </div>
                 <div className="flex items-center justify-between flex-1 p-3">
-                    <p className="text-2xl font-semibold">200</p>
+                    <p className="text-2xl font-semibold">{user?.totalPost}</p>
                     <p>Posts</p>
                 </div>
             </div>

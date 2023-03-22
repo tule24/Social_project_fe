@@ -8,15 +8,19 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import parse from 'html-react-parser'
 import { useDropzone } from 'react-dropzone'
+import { toBase64 } from '@/helper'
+import { CREATE_POST } from '@/graphql'
+import { useMutation } from '@apollo/client'
+import { toast } from 'react-toastify'
 
 function CreatePost({ user, modal, setModal }) {
-  const [value, setValue] = useState('')
+  const [createPost, { data, loading, error }] = useMutation(CREATE_POST)
+  const [content, setContent] = useState('')
   const [files, setFiles] = useState([])
   const [vision, setVision] = useState('public')
 
   const removeImage = (fileName) => {
     const newFiles = files.filter(el => el.file.name !== fileName)
-    console.log(newFiles)
     setFiles([...newFiles])
   }
   const onDrop = useCallback(async (acceptedFile) => {
@@ -30,6 +34,39 @@ function CreatePost({ user, modal, setModal }) {
     }
   })
 
+  const handleSubmit = async () => {
+    if (content.trim() === '') {
+      alert('Please type something in content')
+    } else {
+      const media = await Promise.all(files.map(async (el) => await toBase64(el.file)))
+      const post = {
+        content,
+        media,
+        vision
+      }
+      createPost({
+        variables: {
+          postInput: post
+        }
+    })
+    }
+  }
+
+  useEffect(() => {
+    error && toast.error(error.message)
+  }, [error])
+
+  useEffect(() => {
+    if (data) {
+      const { createPost } = data
+      if (createPost?.__typename === 'MsgResponse') {
+          toast.error(createPost.message)
+      } else {
+          console.log(createPost)
+      }
+  }
+  }, [data])
+
   useEffect(() => {
     return () => files.forEach(el => URL.revokeObjectURL(el.url))
   }, [])
@@ -41,7 +78,7 @@ function CreatePost({ user, modal, setModal }) {
         <div className='mt-10 space-y-5'>
           <div className='space-y-2'>
             <h1 className='text-xl font-semibold'>Content <span className='text-sm'>(required)</span></h1>
-            <ReactQuill theme='snow' value={value} onChange={setValue} className='bg-white rounded-lg' placeholder='Input your content...' />
+            <ReactQuill theme='snow' value={content} onChange={setContent} className='bg-white rounded-lg' placeholder='Input your content...' />
           </div>
           <div className='space-y-2'>
             <h1 className='text-xl font-semibold'>Media</h1>
@@ -78,7 +115,7 @@ function CreatePost({ user, modal, setModal }) {
                 <option className='text-black font-semibold' value='friend'>Friend</option>
                 <option className='text-black font-semibold' value='private'>Private</option>
               </select>
-              <button className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>CREATE POST <AiOutlineFileAdd className='ml-2' size={20} /></button>
+              <button onClick={() => handleSubmit()} className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>CREATE POST <AiOutlineFileAdd className='ml-2' size={20} /></button>
             </div>
           </div>
         </div>
@@ -97,7 +134,7 @@ function CreatePost({ user, modal, setModal }) {
           </div>
           <div className='overflow-auto h-[82%]'>
             <div className='my-2 w-full break-words'>
-              {parse(value)}
+              {parse(content)}
             </div>
             {files.length ? <Slider images={files.map(el => el.url)} /> : ""}
           </div>
