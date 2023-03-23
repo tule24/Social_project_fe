@@ -6,10 +6,10 @@ import parse from 'html-react-parser'
 import { QueryResult, Slider } from '@/components'
 import { useQuery } from '@apollo/client'
 import { COMMENT_OF_POST } from '@/graphql'
-function PostModal({ modal, setModal, post }) {
-    const { id, creator, content, media, totalLike, vision, totalComment, createdAt } = post
+function PostModal({ modal, setModal, post, creator }) {
+    const { id, content, media, totalLike, vision, totalComment, createdAt } = post
     const { loading, error, data } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 } })
-    
+
     return (
         <div className='w-full h-full bg-gray-200 grid grid-cols-[1.5fr_1fr] rounded-lg overflow-hidden'>
             <div className='bg-gray-200 dark:bg-zinc-800 overflow-auto border-r-2 border-gray-300 dark:border-gray-500'>
@@ -37,7 +37,7 @@ function PostModal({ modal, setModal, post }) {
                             </button>
                             <button className="flex items-center space-x-2">
                                 <AiOutlineComment />
-                                <span>{totalComment}</span>
+                                <span>{data?.commentOfPost.length || totalComment}</span>
                             </button>
                         </div>
                         <div className="flex space-x-2 dark:text-gray-400">
@@ -51,7 +51,7 @@ function PostModal({ modal, setModal, post }) {
             <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white'>
                 <div className='flex flex-col space-y-2 w-full p-5 overflow-auto'>
                     <QueryResult loading={loading} error={error} data={data}>
-                        {data.postForUser.map(el => {
+                        {data?.commentOfPost?.map(el => {
                             <div className='flex space-x-3' key={el.id}>
                                 <img src={el.creator.ava} alt="ava" className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500 items-start" />
                                 <div>

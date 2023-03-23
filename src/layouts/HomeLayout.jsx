@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify'
 
 function HomeLayout() {
   return (
-    <div className='bg-white dark:bg-black'>
+    <div className='bg-white dark:bg-black relative'>
       <Header />
       <div className='dark:bg-zinc-900 bg-gray-200 min-h-screen w-screen pt-24 px-10'>
         <Outlet />

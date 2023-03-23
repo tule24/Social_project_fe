@@ -24,7 +24,8 @@ function Login() {
         if (data) {
             const { login } = data
             const { token, refreshToken, user } = login
-            localStorage.setItem('accessToken', JSON.stringify(token))
+            localStorage.setItem('accessToken', token)
+            localStorage.setItem('refreshToken', refreshToken)
             setUserInfo(user)
             navigate('/')
         }

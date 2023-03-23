@@ -34,3 +34,12 @@ export const LOGOUT = gql`
         logout
     }
 `
+
+export const REFRESHTOKEN = gql`
+    mutation Mutation($refreshToken: String!) {
+        refreshToken(refreshToken: $refreshToken) {
+            token
+            refreshToken
+        }
+    }
+`

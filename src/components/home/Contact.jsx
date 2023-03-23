@@ -1,27 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { AiFillPhone, AiFillMessage } from 'react-icons/ai'
 import { SiMessenger } from 'react-icons/si'
 import { SocialContext } from '@/context'
-import { QueryResult } from '@/components'
-import { useQuery } from '@apollo/client'
-import { MESSAGE_ROOM_OF_USER } from '@/graphql'
 
-function Contact({ userId }) {
-    const [messageRoom, setMessageRoom] = useState([])
-    const { miniChat, setMiniChat } = useContext(SocialContext)
-    const { loading, error, data } = useQuery(MESSAGE_ROOM_OF_USER)
-    useEffect(() => {
-        if (data && data.user && data.user.messageRoomOfUser) {
-            const msgRooms = data.user.messageRoomOfUser.map(el => {
-                const user = el.users.find(u => u.id !== userId)
-                return {
-                    id: el.id,
-                    user
-                }
-            })
-            setMessageRoom([...msgRooms])
-        }
-    }, [data])
+function Contact() {
+    const { messageRoom, miniChat, setMiniChat } = useContext(SocialContext)
     return (
         <div className='fixed space-y-4 h-screen right-0 top-[6rem] w-[20%] px-3 text-gray-800 dark:text-gray-100 shadow-xl'>
             <h1 className='text-3xl font-semibold tracking-widest flex items-center'>Contacts <SiMessenger className='ml-3' size={20} /></h1>
@@ -41,23 +24,21 @@ function Contact({ userId }) {
                     className="w-full py-2 pl-10 text-sm border border-gray-300 dark:border-zinc-700 rounded-full focus:outline-none bg-gray-200 dark:bg-zinc-700 text-gray-100 focus:text-black dark:focus:text-gray-300 focus:bg-gray-300 dark:focus:bg-gray-600 focus:border-violet-400" />
             </div>
             <div className='space-y-6'>
-                <QueryResult loading={loading} error={error} data={data}>
-                    {messageRoom?.map(el => {
-                        return <div className='flex items-center justify-between' key={el.id}>
-                            <div className='flex items-center '>
-                                <div className="relative flex-shrink-0">
-                                    <span className={`absolute bottom-0 right-0 w-3 h-3 border rounded-full text-gray-100 border-gray-900 bg-green-400`} />
-                                    <img src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-500 border-gray-700" />
-                                </div>
-                                <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline' onClick={() => setMiniChat([...miniChat, el])}>{el.user.name}</span>
+                {messageRoom?.map(el => {
+                    return <div className='flex items-center justify-between' key={el.id}>
+                        <div className='flex items-center '>
+                            <div className="relative flex-shrink-0">
+                                <span className={`absolute bottom-0 right-0 w-3 h-3 border rounded-full text-gray-100 border-gray-900 bg-green-400`} />
+                                <img loading='lazy' src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-300 border-gray-400" />
                             </div>
-                            <div className='contact-format text-xl space-x-3 '>
-                                <AiFillPhone className='contact-btn' />
-                                <AiFillMessage className='contact-btn' onClick={() => setMiniChat([...miniChat, el])} />
-                            </div>
+                            <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline' onClick={() => setMiniChat([...miniChat, el])}>{el.user.name}</span>
                         </div>
-                    })}
-                </QueryResult>
+                        <div className='contact-format text-xl space-x-3 '>
+                            <AiFillPhone className='contact-btn' />
+                            <AiFillMessage className='contact-btn' onClick={() => setMiniChat([...miniChat, el])} />
+                        </div>
+                    </div>
+                })}
             </div>
         </div>
     )

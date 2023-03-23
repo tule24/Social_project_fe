@@ -5,7 +5,7 @@ import { Tooltip } from '@/components'
 function CardFriend({ user }) {
     return (
         <div className='friend-card my-shadow mb-10'>
-            <img alt="ava" className="friend-ava" src={user.ava} />
+            <img alt="ava" className="friend-ava" src={user.ava} loading='lazy'/>
             <h1 className='text-lg font-semibold capitalize'>{user.name}</h1>
             <div className='w-full grid grid-cols-2'>
                 <Tooltip message={'Unfriend'} position={"left-7"}>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { BsChevronCompactLeft, BsChevronCompactRight, BsCardImage } from 'react-icons/bs';
+import { BsChevronCompactLeft, BsChevronCompactRight, BsCardImage } from 'react-icons/bs'
+import { BackgroundImage } from 'react-image-and-background-image-fade'
 
 function Slider({ images }) {
   const [curIndex, setCurIndex] = useState(0)
@@ -13,11 +14,14 @@ function Slider({ images }) {
     const newIndex = isLastSlide ? 0 : curIndex + 1
     setCurIndex(newIndex)
   }
-
   return (
-    <div
-      className='w-full h-full rounded-lg bg-center bg-cover duration-500 relative'
-      style={{ backgroundImage: `url(${images[curIndex]})` }}>
+    <BackgroundImage
+      src={images[curIndex]}
+      width='100%'
+      height='100%'
+      className='rounded-lg bg-center bg-cover duration-500 relative'
+      lazyLoad
+    >
       {images.length > 1 ? (
         <>
           <div className='absolute text-white right-5 top-5 flex items-center space-x-2 font-semibold'>
@@ -32,8 +36,7 @@ function Slider({ images }) {
           </div>
         </>
       ) : ""}
-
-    </div>
+    </BackgroundImage>
   )
 }
 

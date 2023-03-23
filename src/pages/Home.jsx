@@ -14,7 +14,7 @@ function Home() {
             <div className='w-[56%] mx-[20%]'>
                 <div className='w-[70%] ml-[22%] space-y-10 pb-5'>
                     <QueryResult loading={loading} error={error} data={data}>
-                        {data?.postForUser.map(el => <Post key={el.id} post={el} />)}
+                        {data?.postForUser?.map(el => <Post key={el.id} post={el} />)}
                     </QueryResult>
                 </div>
             </div>

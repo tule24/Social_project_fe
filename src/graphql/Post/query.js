@@ -19,9 +19,9 @@ export const POST_FOR_USER = gql`
     }
 `
 
-export const POST_OF_USER = gql`
-    query Query($page: Int!, $userId: ID) {
-        postOfUser(page: $page, userId: $userId) {
+export const POST_OF_OWNER = gql`
+    query Query($page: Int!) {
+        postOfUser(page: $page) {
             id
             content
             media

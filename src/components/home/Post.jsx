@@ -3,25 +3,27 @@ import { AiFillLike, AiOutlineLike, AiOutlineComment } from 'react-icons/ai'
 import { FaUserLock, FaUsers } from 'react-icons/fa'
 import { GiEarthAmerica } from 'react-icons/gi'
 import { PostModal, Slider } from '@/components'
-import { SocialContext } from '@/context'
 import parse from 'html-react-parser'
+import { SocialContext } from '@/context'
 
 function Post({ post, user }) {
-    const { setModal, modal } = useContext(SocialContext)
     const { id, content, media, totalLike, vision, totalComment, createdAt } = post
     const creator = user ? user : post.creator
+    const { modal, setModal } = useContext(SocialContext)
     return (
         <div className="flex flex-col w-full p-6 space-y-5 overflow-hidden rounded-lg my-shadow dark:bg-zinc-800 dark:text-gray-100">
             <div className="flex space-x-4">
-                <img alt="" src={creator.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
+                <img alt="" src={creator?.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
                 <div className="flex flex-col space-y-1">
-                    <a rel="noopener noreferrer" href="#" className="text-sm font-semibold">{creator.name}</a>
+                    <span className="text-sm font-semibold capitalize">{creator?.name}</span>
                     <span className="text-xs dark:text-gray-400">{createdAt}</span>
                 </div>
             </div>
             <div>
                 {parse(content)}
-                {media.length ? <Slider images={media} /> : ""}
+                {media.length ? <div className='h-[30rem] mt-5'>
+                    <Slider images={media} />
+                </div> : ""}
             </div>
             <hr className='border-gray-300 dark:border-gray-500' />
             <div className="flex flex-wrap justify-between text-lg px-2">
@@ -30,7 +32,7 @@ function Post({ post, user }) {
                         <AiFillLike />
                         <span>{totalLike}</span>
                     </button>
-                    <button className="flex items-center space-x-2 cursor-pointer" onClick={() => setModal({ ...modal, open: true, component: <PostModal modal={modal} setModal={setModal} post={post} /> })}>
+                    <button className="flex items-center space-x-2 cursor-pointer" onClick={() => setModal({ ...modal, open: true, component: <PostModal modal={modal} setModal={setModal} post={post} creator={creator} /> })}>
                         <AiOutlineComment />
                         <span>{totalComment}</span>
                     </button>

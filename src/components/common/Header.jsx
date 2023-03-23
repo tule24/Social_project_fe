@@ -7,13 +7,12 @@ import { FaUserFriends, FaUser } from 'react-icons/fa'
 import { Tooltip } from '@/components'
 import { SocialContext } from '@/context'
 import { CreatePost } from '@/components'
-import { GET_AVA } from '@/graphql'
+import { GET_USER_INFO } from '@/graphql'
 import { useQuery } from '@apollo/client'
 
 function Header() {
-    const { loading, error, data } = useQuery(GET_AVA)
-    const [ava, setAva] = useState("")
-    const { setModal, modal } = useContext(SocialContext)
+    const { loading, error, data } = useQuery(GET_USER_INFO)
+    const { setModal, modal, handleInit, userInfo } = useContext(SocialContext)
     const [theme, setTheme] = useState('')
 
     useEffect(() => {
@@ -25,14 +24,14 @@ function Header() {
     }, [theme])
     useEffect(() => {
         if (data && data.user) {
-            setAva(data.user.ava)
+            handleInit(data.user)
         }
     }, [data])
     const changeTheme = () => {
         setTheme(theme === "dark" ? "" : "dark")
     }
     return (
-        <header className="py-5 px-10 bg-gray-100 dark:bg-zinc-800 dark:text-gray-100 shadow-md fixed left-0 right-0 z-50">
+        <header className="py-5 px-10 bg-gray-100 dark:bg-zinc-800 dark:text-gray-100 shadow-md fixed left-0 right-0 z-40">
             <div className="container flex justify-between items-center mx-auto">
                 <div className='flex items-center space-x-5'>
                     <Link to={'/'}>
@@ -67,10 +66,10 @@ function Header() {
                         <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>
                     </Tooltip>
                     <Tooltip message={"Notification"} position={"-left-3"}>
-                        <button className="header-btn" onClick={() => setModal({ ...modal, open: true })}><BsBellFill /></button>
+                        <button className="header-btn"><BsBellFill /></button>
                     </Tooltip>
                     <Tooltip message={"Profile"} position={"-left-1"}>
-                        <Link to={'/profile'}>{ava ? <img src={ava} alt="ava" className='w-10 rounded-full' /> : <FaUser />}</Link>
+                        <Link to={'/profile'}>{userInfo?.ava ? <img src={userInfo?.ava} alt="ava" className='w-10 rounded-full' loading='lazy' /> : <FaUser />}</Link>
                     </Tooltip>
                 </div>
                 <button className="p-4 lg:hidden">

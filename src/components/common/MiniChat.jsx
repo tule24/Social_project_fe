@@ -6,25 +6,25 @@ import { SocialContext } from '@/context'
 function MiniChat() {
   const { miniChat, setMiniChat } = useContext(SocialContext)
   const closeChat = (id) => {
-    const newMiniChat = miniChat.filter(el => el._id !== id)
+    const newMiniChat = miniChat.filter(el => el.id !== id)
     setMiniChat([...newMiniChat])
   }
   return (
     <>
       {
         miniChat.map(chat => {
-          return <div className='fixed bottom-5 w-max right-[20%] flex justify-end space-x-2' key={chat._id}>
+          return <div className='fixed bottom-5 w-max right-[20%] flex justify-end space-x-2' key={chat.id}>
             <div className='h-[50vh] w-[20rem] bg-white dark:bg-zinc-700 dark:text-white rounded-lg my-shadow flex flex-col overflow-hidden'>
-              <div className='w-full bg-blue-500 dark:bg-zinc-900 flex justify-between items-center px-2 py-1 h-[15%]'>
+              <div className='w-full bg-blue-500 dark:bg-zinc-900 flex justify-between items-center px-2 py-1 h-[12%]'>
                 <div className="flex space-x-1 items-center">
-                  <img alt="ava" src={chat.ava} className="object-cover w-10 h-10 rounded-full shadow dark:bg-gray-500" />
-                  <p className="font-semibold capitalize">{chat.name}</p>
+                  <img loading='lazy' alt="ava" src={chat.user.ava} className="object-cover w-10 h-10 rounded-full shadow dark:bg-gray-500" />
+                  <p className="font-semibold capitalize">{chat.user.name}</p>
                 </div>
-                <GrClose size={20} className='cursor-pointer' onClick={() => closeChat(chat._id)}/>
+                <GrClose size={20} className='cursor-pointer' onClick={() => closeChat(chat.id)}/>
               </div>
-              <div className='h-[77%] overflow-auto p-2 space-y-5'>
+              <div className='flex-grow overflow-auto p-2 space-y-5'>
                 <div className='flex items-end text-sm'>
-                  <img src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 mr-1" />
+                  <img loading='lazy' src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 mr-1" />
                   <div className='w-[80%] space-y-1'>
                     <p className='bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md break-words'>
                       adadasdasdasdasdlashdasdasjdklhasdasds
@@ -43,10 +43,10 @@ function MiniChat() {
                       adadasdasdasdasdlashdasdasjdklhasdasds
                     </p>
                   </div>
-                  <img src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 ml-1" />
+                  <img loading='lazy' src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 ml-1" />
                 </div>
                 <div className='flex items-end text-sm'>
-                  <img src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 mr-1" />
+                  <img loading='lazy' src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 mr-1" />
                   <div className='w-[80%] space-y-1'>
                     <p className='bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md break-words'>
                       adadasdasdasdasdlashdasdasjdklhasdasds
@@ -57,7 +57,7 @@ function MiniChat() {
                   </div>
                 </div>
               </div>
-              <div className='h-[13%] border-t flex'>
+              <div className='h-[10%] border-t flex'>
                 <input
                   type='text'
                   name='message'

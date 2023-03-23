@@ -37,11 +37,26 @@ const sample = {
 export const SocialContext = createContext()
 export const SocialProvider = (({ children }) => {
     const [userInfo, setUserInfo] = useState()
+    const [messageRoom, setMessageRoom] = useState([])
     const [miniChat, setMiniChat] = useState([])
     const [modal, setModal] = useState({
         open: false,
         component: ""
     })
+    const [loading, setLoading] = useState(true)
+
+    const handleInit = (userData) => {
+        const { messageRoomOfUser, ...userInfo } = userData
+        const messageRoom = messageRoomOfUser.map(el => {
+            const user = el.users.find(u => u.id !== userInfo.id)
+            return {
+                id: el.id,
+                user
+            }
+        })
+        setUserInfo({ ...userInfo })
+        setMessageRoom([...messageRoom])
+    }
 
     return (
         <SocialContext.Provider
@@ -49,9 +64,14 @@ export const SocialProvider = (({ children }) => {
                 userInfo,
                 modal,
                 miniChat,
+                messageRoom,
+                loading,
+                setLoading,
+                setMessageRoom,
                 setUserInfo,
                 setModal,
-                setMiniChat
+                setMiniChat,
+                handleInit
             }}>
             {children}
         </SocialContext.Provider>

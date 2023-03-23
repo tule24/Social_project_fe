@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { AiFillLike, AiOutlineCloseCircle, AiOutlineClose, AiOutlineComment, AiOutlineFileAdd } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
+import { FiLoader } from 'react-icons/fi'
 import { FaUsers, FaUserLock } from 'react-icons/fa'
 import uploadImg from '@/assets/upload.png'
 import { Slider } from '@/components'
@@ -9,12 +10,12 @@ import 'react-quill/dist/quill.snow.css'
 import parse from 'html-react-parser'
 import { useDropzone } from 'react-dropzone'
 import { toBase64 } from '@/helper'
-import { CREATE_POST } from '@/graphql'
+import { CREATE_POST, POST_OF_OWNER, POST_FOR_USER } from '@/graphql'
 import { useMutation } from '@apollo/client'
 import { toast } from 'react-toastify'
 
 function CreatePost({ user, modal, setModal }) {
-  const [createPost, { data, loading, error }] = useMutation(CREATE_POST)
+  const [createPost, { loading, data, error }] = useMutation(CREATE_POST)
   const [content, setContent] = useState('')
   const [files, setFiles] = useState([])
   const [vision, setVision] = useState('public')
@@ -47,8 +48,9 @@ function CreatePost({ user, modal, setModal }) {
       createPost({
         variables: {
           postInput: post
-        }
-    })
+        },
+        refetchQueries: [{ query: POST_FOR_USER }, { query: POST_OF_OWNER }]
+      })
     }
   }
 
@@ -58,13 +60,9 @@ function CreatePost({ user, modal, setModal }) {
 
   useEffect(() => {
     if (data) {
-      const { createPost } = data
-      if (createPost?.__typename === 'MsgResponse') {
-          toast.error(createPost.message)
-      } else {
-          console.log(createPost)
-      }
-  }
+      toast.success('Create new post success')
+      setModal({ ...modal, open: false })
+    }
   }, [data])
 
   useEffect(() => {
@@ -115,7 +113,10 @@ function CreatePost({ user, modal, setModal }) {
                 <option className='text-black font-semibold' value='friend'>Friend</option>
                 <option className='text-black font-semibold' value='private'>Private</option>
               </select>
-              <button onClick={() => handleSubmit()} className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>CREATE POST <AiOutlineFileAdd className='ml-2' size={20} /></button>
+              {loading
+                ? <button disabled className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>WAITING <FiLoader className='ml-2 animate-spin' size={20} /></button>
+                : <button onClick={() => handleSubmit()} className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>CREATE POST <AiOutlineFileAdd className='ml-2' size={20} /></button>
+              }
             </div>
           </div>
         </div>
