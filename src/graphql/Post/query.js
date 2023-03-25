@@ -12,6 +12,7 @@ export const POST_FOR_USER = gql`
             content
             media
             totalLike
+            liked
             vision
             totalComment
             createdAt

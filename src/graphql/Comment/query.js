@@ -16,3 +16,19 @@ export const COMMENT_OF_POST = gql`
       }
     }
 `
+
+export const REPLIES_OF_COMMENT = gql`
+    query RepliesOfComment($commentId: ID!, $page: Int!) {
+      repliesOfComment(commentId: $postId, page: $page) {
+        id
+        creator {
+          id
+          name
+          ava
+        }
+        content
+        createdAt
+        totalLike
+      }
+    }
+`

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CardFriend, CardFriendNew, CardFriendWaiting, CardFriendRequest, QueryResult } from '@/components'
+import { CardFriend, CardFriendNew, CardFriendWaiting, CardFriendRequest, QueryResult, FriendSkeleton } from '@/components'
 import { GET_FRIEND_LIST, GET_NEW_FRIEND } from '@/graphql'
 import { useQuery } from '@apollo/client'
 const TAB_FRIEND = ['Your friend', 'Friend request', 'Friend waiting', 'Find new friend']
@@ -51,7 +51,7 @@ function Friend() {
                     )
                 })}
             </div>
-            <QueryResult loading={loading} data={data} error={error}>
+            <QueryResult loading={loading} data={data} error={error} skeleton={<FriendSkeleton />}>
                 <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Your friend' ? 'block' : 'hidden'}`}>
                     {friend.confirm?.map(user => <CardFriend user={user} key={user._id} />)}
                 </div>

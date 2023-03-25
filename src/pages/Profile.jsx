@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Contact, Post, UserInfo, UserStat, QueryResult } from '@/components'
+import { Contact, Post, UserInfo, UserStat, QueryResult, PostSkeleton } from '@/components'
 import { useQuery } from '@apollo/client'
 import { POST_OF_OWNER } from '@/graphql'
 import { SocialContext } from '@/context'
@@ -15,7 +15,7 @@ function Profile() {
             </div>
             <div className='w-[55%] mx-[20%]'>
                 <div className='w-[70%] ml-[25%] space-y-10 pb-5'>
-                    <QueryResult loading={loading} error={error} data={data}>
+                    <QueryResult loading={loading} error={error} data={data} skeleton={<PostSkeleton />}>
                         {data?.postOfUser?.map(el => <Post key={el.id} post={el} user={userInfo} />)}
                     </QueryResult>
                 </div>

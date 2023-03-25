@@ -1,5 +1,5 @@
 import React from 'react'
-import { Contact, Post, Weather, Calendar, QueryResult } from '@/components'
+import { Contact, Post, Weather, Calendar, QueryResult, PostSkeleton } from '@/components'
 import { POST_FOR_USER } from '@/graphql'
 import { useQuery } from '@apollo/client'
 
@@ -13,7 +13,7 @@ function Home() {
             </div>
             <div className='w-[56%] mx-[20%]'>
                 <div className='w-[70%] ml-[22%] space-y-10 pb-5'>
-                    <QueryResult loading={loading} error={error} data={data}>
+                    <QueryResult loading={loading} error={error} data={data} skeleton={<PostSkeleton />}>
                         {data?.postForUser?.map(el => <Post key={el.id} post={el} />)}
                     </QueryResult>
                 </div>

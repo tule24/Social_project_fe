@@ -4,14 +4,14 @@ import { SiSocialblade } from 'react-icons/si'
 import { BsBellFill, BsPencilSquare } from 'react-icons/bs'
 import { MdLightMode, MdNightlight } from 'react-icons/md'
 import { FaUserFriends, FaUser } from 'react-icons/fa'
-import { Tooltip } from '@/components'
+import { Tooltip, PostEdit } from '@/components'
 import { SocialContext } from '@/context'
-import { CreatePost } from '@/components'
-import { GET_USER_INFO } from '@/graphql'
-import { useQuery } from '@apollo/client'
+import { GET_USER_INFO, CREATE_POST } from '@/graphql'
+import { useMutation, useQuery } from '@apollo/client'
 
 function Header() {
     const { loading, error, data } = useQuery(GET_USER_INFO)
+    const [createPost] = useMutation(CREATE_POST)
     const { setModal, modal, handleInit, userInfo } = useContext(SocialContext)
     const [theme, setTheme] = useState('')
 
@@ -60,7 +60,20 @@ function Header() {
                         <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
                     <Tooltip message={"Create Post"} position={"-left-5"}>
-                        <button className="header-btn" onClick={() => setModal({ ...modal, open: true, component: <CreatePost user={userInfo} modal={modal} setModal={setModal} /> })}><BsPencilSquare /></button>
+                        <button
+                            className="header-btn"
+                            onClick={() => setModal({
+                                ...modal,
+                                open: true,
+                                component: <PostEdit
+                                    user={userInfo}
+                                    modal={modal}
+                                    setModal={setModal}
+                                    createPost={createPost}
+                                />
+                            })}>
+                            <BsPencilSquare />
+                        </button>
                     </Tooltip>
                     <Tooltip message={"Friends"} position={"-left-3"}>
                         <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>

@@ -1,4 +1,4 @@
 import PostModal from "./PostModal"
-import CreatePost from "./CreatePost"
+import PostEdit from "./PostEdit"
 import UpdateUser from './UpdateUser'
-export { PostModal, CreatePost, UpdateUser }
+export { PostModal, PostEdit, UpdateUser }

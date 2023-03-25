@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client"
 
 export const CREATE_COMMENT = gql`
-    mutation Mutation($postId: ID!, $commentInput: commentInput!) {
-        createComment(postId: $postId, commentInput: $commentInput) {
+    mutation Mutation($postId: ID!, $content: String!) {
+        createComment(postId: $postId, content: $content) {
             id
             content
             createdAt
@@ -13,8 +13,8 @@ export const CREATE_COMMENT = gql`
 `
 
 export const UPDATE_COMMENT = gql`
-    mutation Mutation($commentId: ID!, $commentInput: commentInput!) {
-        updateComment(commentId: $commentId, commentInput: $commentInput) {
+    mutation Mutation($commentId: ID!, $content: String!) {
+        updateComment(commentId: $commentId, content: $content) {
             id
             content
         }
@@ -39,8 +39,8 @@ export const HANDLE_LIKE_COMMENT = gql`
 `
 
 export const CREATE_REPLIES = gql`
-    mutation Mutation($commentId: ID!, $repliesInput: commentInput!) {
-        createReplies(commentId: $commentId, repliesInput: $repliesInput) {
+    mutation Mutation($commentId: ID!, $content: String!) {
+        createReplies(commentId: $commentId, content: $content) {
             id
             content
             createdAt
@@ -50,8 +50,8 @@ export const CREATE_REPLIES = gql`
 `
 
 export const UPDATE_REPLIES = gql`
-    mutation Mutation($commentId: ID!, $repliesId: ID!, $repliesInput: commentInput!) {
-        updateReplies(commentId: $commentId, repliesId: $repliesId, repliesInput: $repliesInput) {
+    mutation Mutation($commentId: ID!, $repliesId: ID!, $content: String!) {
+        updateReplies(commentId: $commentId, repliesId: $repliesId, content: $content) {
             id
             content
         }

@@ -1,14 +1,30 @@
-import React from 'react'
-import { BsSendFill, BsClockHistory } from 'react-icons/bs'
-import { AiFillLike, AiOutlineComment, AiOutlineCloseCircle } from 'react-icons/ai'
+import React, { useRef, useState } from 'react'
+import { BsSendFill } from 'react-icons/bs'
+import { AiFillLike, AiOutlineComment, AiOutlineCloseCircle, AiOutlineLike, AiOutlineEdit } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
 import parse from 'html-react-parser'
-import { QueryResult, Slider } from '@/components'
-import { useQuery } from '@apollo/client'
-import { COMMENT_OF_POST } from '@/graphql'
+import { QueryResult, Slider, CommentSkeleton } from '@/components'
+import { Comment } from './components'
+import { useQuery, useMutation } from '@apollo/client'
+import { COMMENT_OF_POST, CREATE_COMMENT } from '@/graphql'
+import { FiLoader } from 'react-icons/fi'
+
 function PostModal({ modal, setModal, post, creator }) {
-    const { id, content, media, totalLike, vision, totalComment, createdAt } = post
+    const { id, content, media, totalLike, liked, vision, totalComment, createdAt } = post
     const { loading, error, data } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 } })
+    const [createComment] = useMutation(CREATE_COMMENT)
+    const [loadingComment, setLoadingComment] = useState(false)
+    const textComment = useRef(null)
+    const handleComment = async () => {
+        setLoadingComment(true)
+        createComment({
+            variables: {
+                postId: id,
+                content: textComment.current.value
+            },
+            onCompleted: () => { setLoadingComment(false) }
+        })
+    }
 
     return (
         <div className='w-full h-full bg-gray-200 grid grid-cols-[1.5fr_1fr] rounded-lg overflow-hidden'>
@@ -18,7 +34,7 @@ function PostModal({ modal, setModal, post, creator }) {
                         <div className="flex space-x-4">
                             <img alt="" src={creator.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
                             <div className="flex flex-col space-y-1">
-                                <a rel="noopener noreferrer" href="#" className="text-sm font-semibold">{creator.name}</a>
+                                <span className="text-sm font-semibold capitalize">{creator.name}</span>
                                 <span className="text-xs dark:text-gray-400">{createdAt}</span>
                             </div>
                         </div>
@@ -32,12 +48,12 @@ function PostModal({ modal, setModal, post, creator }) {
                     <div className="flex flex-wrap justify-between text-lg px-2">
                         <div className="flex space-x-10 dark:text-gray-400">
                             <button className="flex items-center space-x-2">
-                                <AiFillLike />
+                                {liked ? <AiFillLike /> : <AiOutlineLike />}
                                 <span>{totalLike}</span>
                             </button>
                             <button className="flex items-center space-x-2">
                                 <AiOutlineComment />
-                                <span>{data?.commentOfPost.length || totalComment}</span>
+                                <span>{data?.commentOfPost?.length || totalComment}</span>
                             </button>
                         </div>
                         <div className="flex space-x-2 dark:text-gray-400">
@@ -50,29 +66,8 @@ function PostModal({ modal, setModal, post, creator }) {
             </div>
             <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white'>
                 <div className='flex flex-col space-y-2 w-full p-5 overflow-auto'>
-                    <QueryResult loading={loading} error={error} data={data}>
-                        {data?.commentOfPost?.map(el => {
-                            <div className='flex space-x-3' key={el.id}>
-                                <img src={el.creator.ava} alt="ava" className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500 items-start" />
-                                <div>
-                                    <div className='bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md w-max'>
-                                        <p className='font-semibold'>{el.creator.name}</p>
-                                        <p>{el.content}</p>
-                                    </div>
-                                    <div className='flex text-[12px] space-x-3 p-1 font-semibold dark:text-gray-200'>
-                                        <button className="flex items-center space-x-2">
-                                            <AiFillLike />
-                                            <span>{el.totalLike}</span>
-                                        </button>
-                                        <button className="flex items-center space-x-2">
-                                            <AiOutlineComment />
-                                            <span>{el.totalReplies}</span>
-                                        </button>
-                                        <p className='flex items-center'><BsClockHistory /><span className='ml-1'>{el.createdAt}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        })}
+                    <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />}>
+                        {data?.commentOfPost?.map(el => <Comment comment={el} key={el.id} />)}
                     </QueryResult>
                 </div>
                 <div className='flex border-t border-gray-400 p-3 justify-center h-[10%]'>
@@ -82,10 +77,11 @@ function PostModal({ modal, setModal, post, creator }) {
                             name='comment'
                             placeholder='Input your comment'
                             className='bg-white bg-opacity-0 w-[90%] pl-5 placeholder:text-sm text-black dark:text-gray-200 focus:outline-none focus:border-none'
+                            ref={textComment}
                         />
-                        <span className='icon flex items-center px-4 cursor-pointer'>
-                            <BsSendFill size={20} />
-                        </span>
+                        <button className='icon flex items-center px-4 cursor-pointer' disabled={loadingComment} onClick={() => handleComment()}>
+                            {loadingComment ? <FiLoader className='animate-spin' size={20} /> : <BsSendFill size={20} />}
+                        </button>
                     </div>
                 </div>
             </div>
