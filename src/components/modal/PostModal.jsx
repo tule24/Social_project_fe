@@ -8,6 +8,7 @@ import { Comment } from './components'
 import { useQuery, useMutation } from '@apollo/client'
 import { COMMENT_OF_POST, CREATE_COMMENT } from '@/graphql'
 import { FiLoader } from 'react-icons/fi'
+import { createCommentService } from '@/services'
 
 function PostModal({ modal, setModal, post, creator }) {
     const { id, content, media, totalLike, liked, vision, totalComment, createdAt } = post
@@ -17,13 +18,7 @@ function PostModal({ modal, setModal, post, creator }) {
     const textComment = useRef(null)
     const handleComment = async () => {
         setLoadingComment(true)
-        createComment({
-            variables: {
-                postId: id,
-                content: textComment.current.value
-            },
-            onCompleted: () => { setLoadingComment(false) }
-        })
+        createComment(createCommentService(id, textComment.current.value, setLoadingComment))
     }
 
     return (
@@ -67,7 +62,7 @@ function PostModal({ modal, setModal, post, creator }) {
             <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white'>
                 <div className='flex flex-col space-y-2 w-full p-5 overflow-auto'>
                     <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />}>
-                        {data?.commentOfPost?.map(el => <Comment comment={el} key={el.id} />)}
+                        {data?.commentOfPost?.map(el => <Comment postId={id} comment={el} key={el.id} />)}
                     </QueryResult>
                 </div>
                 <div className='flex border-t border-gray-400 p-3 justify-center h-[10%]'>

@@ -10,8 +10,7 @@ import 'react-quill/dist/quill.snow.css'
 import parse from 'html-react-parser'
 import { useDropzone } from 'react-dropzone'
 import { toBase64 } from '@/helper'
-import { POST_OF_OWNER, POST_FOR_USER } from '@/graphql'
-import { toast } from 'react-toastify'
+import { createPostService, updatePostService, deletePostService } from '@/services'
 
 function PostEdit({ user, modal, setModal, post, createPost, updatePost, deletePost }) {
   const [loadingCreate, setLoadingCreate] = useState(false)
@@ -54,52 +53,15 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
         vision
       }
       if (post) {
-        updatePost({
-          variables: {
-            postId: post.id,
-            postInput: newPost
-          },
-          onCompleted: () => {
-            toast.success('Update post success')
-            setModal({ ...modal, open: false })
-          },
-          onError: (error) => {
-            toast.error(error.message)
-            setModal({ ...modal, open: false })
-          }
-        })
+        updatePost(updatePostService(post.id, newPost, modal, setModal))
       } else {
-        createPost({
-          variables: {
-            postInput: newPost
-          },
-          onCompleted: () => {
-            toast.success('Create new post success')
-            setModal({ ...modal, open: false })
-          },
-          onError: (error) => {
-            toast.error(error.message)
-            setModal({ ...modal, open: false })
-          }
-        })
+        createPost(createPostService(newPost, modal, setModal))
       }
     }
   }
   const handleDelete = async () => {
     setLoadingDel(true)
-    deletePost({
-      variables: {
-        postId: post.id
-      },
-      onCompleted: () => {
-        toast.success('Delete post success')
-        setModal({ ...modal, open: false })
-      },
-      onError: (error) => {
-        toast.error(error.message)
-        setModal({ ...modal, open: false })
-      }
-    })
+    deletePost(deletePostService(post.id, modal, setModal))
   }
 
   useEffect(() => {

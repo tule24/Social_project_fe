@@ -4,6 +4,11 @@ export const CREATE_COMMENT = gql`
     mutation Mutation($postId: ID!, $content: String!) {
         createComment(postId: $postId, content: $content) {
             id
+            creator {
+              id
+              name
+              ava
+            }
             content
             createdAt
             totalLike
@@ -26,6 +31,13 @@ export const DELETE_COMMENT = gql`
         deleteComment(commentId: $commentId) {
             id
         }
+    }
+`
+
+export const COMMENT_FRAGMENT = gql`
+    fragment CommenEdit on Comment {
+        id
+        content
     }
 `
 

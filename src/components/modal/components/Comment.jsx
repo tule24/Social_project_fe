@@ -1,10 +1,15 @@
+import { useMutation } from '@apollo/client'
 import React, { useEffect, useRef, useState } from 'react'
-import { AiFillLike, AiOutlineComment, AiOutlineEdit, AiOutlineLike } from 'react-icons/ai'
+import { AiFillLike, AiOutlineComment, AiOutlineEdit, AiOutlineLike, AiOutlineDelete } from 'react-icons/ai'
 import { BsClockHistory } from 'react-icons/bs'
+import { UPDATE_COMMENT, DELETE_COMMENT } from '@/graphql'
+import { deleteCommentService, updateCommentService } from '@/services'
 import { Replies } from '.'
 
-function Comment({ comment }) {
+function Comment({ postId, comment }) {
     const { id, creator, content, createdAt, liked, totalLike, totalReplies } = comment
+    const [editComment] = useMutation(UPDATE_COMMENT)
+    const [deleteComment] = useMutation(DELETE_COMMENT)
     const cmtRef = useRef(null)
     const [cmt, setCmt] = useState(content)
     const [editCmt, setEditCmt] = useState(false)
@@ -23,9 +28,13 @@ function Comment({ comment }) {
         }
     }, [editCmt])
 
-    const handleSubmit = () => {
+    const handleEditCmt = () => {
         console.log(cmt)
+        editComment(updateCommentService(id, cmt))
         handleCloseEdit()
+    }
+    const handleDeleteCmt = () => {
+        deleteComment(deleteCommentService(postId, id))
     }
     const handleCloseEdit = () => {
         setEditCmt(false)
@@ -50,7 +59,7 @@ function Comment({ comment }) {
                         autoFocus />
                     : <p>{content}</p>}
                 {editCmt && <div className='flex justify-end space-x-2 mt-1 text-sm'>
-                    <button className='bg-green-500 px-2 rounded-lg hover:bg-green-300' onClick={() => handleSubmit()}>Submit</button>
+                    <button className='bg-green-500 px-2 rounded-lg hover:bg-green-300' onClick={() => handleEditCmt()}>Submit</button>
                     <button className='bg-red-500 px-2 rounded-lg hover:bg-red-300' onClick={() => handleCloseEdit()}>Cancel</button>
                 </div>}
             </div>
@@ -62,6 +71,9 @@ function Comment({ comment }) {
                 <button className="flex items-center space-x-1 hover:text-black" onClick={() => setOpenRep(true)}>
                     <AiOutlineComment />
                     <span>{totalReplies}</span>
+                </button>
+                <button className="flex items-center space-x-1 hover:text-black" title='Delete comment'>
+                    <AiOutlineDelete />
                 </button>
                 <button className="flex items-center space-x-1 hover:text-black" title='Edit comment' onClick={() => setEditCmt(true)}>
                     <AiOutlineEdit />
