@@ -68,7 +68,7 @@ export const CommentSkeleton = () => {
         <div className='flex space-x-3'>
             <div className="object-cover w-12 h-12 rounded-full shadow skeleton" />
             <div>
-                <div className='bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md w-max'>
+                <div className='bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md w-max flex flex-col'>
                     <p className="skeleton w-28 h-3 shadow" />
                     <p className="skeleton w-28 h-3 shadow" />
                 </div>

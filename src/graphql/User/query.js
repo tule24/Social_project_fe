@@ -24,15 +24,12 @@ export const GET_USER_INFO = gql`
 `
 
 export const GET_FRIEND_LIST = gql`
-    query User($userId: ID) {
-        user(userId: $userId) {
-            id
-            friendList {
-                _id 
-                name
-                ava
-                status
-            }
+    query Friend {
+        friendOfUser{
+            id 
+            name
+            ava
+            status
         }
     }
 `

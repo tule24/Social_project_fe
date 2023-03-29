@@ -23,18 +23,15 @@ export const CHANGE_PASSWORD = gql`
             }
         }
     }
-`  
+`
 
 export const ADD_FRIEND = gql`
     mutation Mutation($friendId: ID!) {
         addFriend(friendId: $friendId) {
             id
-            friendList {
-                _id
-                name
-                ava
-                status
-            }
+            name
+            ava
+            status
         }
     }
 `
@@ -43,12 +40,9 @@ export const CONFIRM_FRIEND = gql`
     mutation Mutation($friendId: ID!) {
         confirmFriend(friendId: $friendId) {
             id
-            friendList {
-                _id
-                name
-                ava
-                status
-            }
+            name
+            ava
+            status
         }
     }
 `
@@ -57,12 +51,15 @@ export const UNFRIEND = gql`
     mutation Mutation($friendId: ID!) {
         unFriend(friendId: $friendId) {
             id
-            friendList {
-                _id
-                name
-                status
-                ava
-            }
+            name
+            ava
         }
+    }
+`
+
+export const FRIEND_FRAGMENT = gql`
+    fragment FriendUpdate on Friend {
+        id
+        vision
     }
 `

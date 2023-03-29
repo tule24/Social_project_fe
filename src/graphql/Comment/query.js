@@ -9,6 +9,7 @@ export const COMMENT_OF_POST = gql`
           name
           ava
         }
+        liked
         content
         createdAt
         totalLike
@@ -19,13 +20,14 @@ export const COMMENT_OF_POST = gql`
 
 export const REPLIES_OF_COMMENT = gql`
     query RepliesOfComment($commentId: ID!, $page: Int!) {
-      repliesOfComment(commentId: $postId, page: $page) {
+      repliesOfComment(commentId: $commentId, page: $page) {
         id
         creator {
           id
           name
           ava
         }
+        liked
         content
         createdAt
         totalLike

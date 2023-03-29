@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { AiFillLike, AiOutlineLike, AiOutlineCloseCircle, AiOutlineClose, AiOutlineComment, AiOutlineFileAdd, AiOutlineDelete } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
 import { FiLoader } from 'react-icons/fi'
-import { FaUsers, FaUserLock } from 'react-icons/fa'
-import uploadImg from '@/assets/upload.png'
+import { FaUsers, FaUserLock, FaImage } from 'react-icons/fa'
 import { Slider } from '@/components'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -91,7 +90,7 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
               <div className='w-full flex flex-col items-center justify-center space-y-2 py-5 rounded-lg border-2 border-dashed border-gray-400'>
                 <p>JPG, PNG, WEBM, MAX 100MB</p>
                 <div>
-                  <img src={uploadImg} alt="upload" className='w-[5rem]' />
+                  <FaImage size={80} className='text-gray-200'/>
                 </div>
                 <p>Drag & drop file</p>
                 <p>or Browse media on your device</p>
@@ -164,7 +163,7 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
               <img alt="" src={user.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
               <div className="flex flex-col space-y-1">
                 <span className="text-sm font-semibold capitalize">{user.name}</span>
-                <span className="text-xs dark:text-gray-400">{post ? post.createdAt : 'Just now'}</span>
+                <span className="text-xs dark:text-gray-400">{post ? post.updatedAt : 'Just now'}</span>
               </div>
             </div>
             <button onClick={() => setModal({ ...modal, open: false })}><AiOutlineCloseCircle size={30} /></button>
@@ -183,7 +182,7 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
               </button>
               <button className="flex items-center space-x-2">
                 <AiOutlineComment />
-                <span>0</span>
+                <span>{post && post.totalComment ? post.totalComment : 0}</span>
               </button>
             </div>
             <div className="flex space-x-2 dark:text-gray-400">

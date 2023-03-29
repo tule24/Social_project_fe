@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CardFriend, CardFriendNew, CardFriendWaiting, CardFriendRequest, QueryResult, FriendSkeleton } from '@/components'
-import { GET_FRIEND_LIST, GET_NEW_FRIEND } from '@/graphql'
+import { GET_FRIEND_LIST } from '@/graphql'
 import { useQuery } from '@apollo/client'
 const TAB_FRIEND = ['Your friend', 'Friend request', 'Friend waiting', 'Find new friend']
 
@@ -9,19 +9,16 @@ function Friend() {
     const [friend, setFriend] = useState({
         confirm: [],
         waiting: [],
-        request: [],
-        newFriend: []
+        request: []
     })
     const { data, loading, error } = useQuery(GET_FRIEND_LIST)
-    const queryNew = useQuery(GET_NEW_FRIEND)
-
     useEffect(() => {
-        if (data && data.user) {
-            const { friendList } = data.user
+        if (data && data.friendOfUser) {
+            const { friendOfUser } = data
             const confirm = []
             const waiting = []
             const request = []
-            friendList.forEach(el => {
+            friendOfUser.forEach(el => {
                 if (el.status === 'confirm') { confirm.push(el) }
                 if (el.status === 'waiting') { waiting.push(el) }
                 if (el.status === 'request') { request.push(el) }
@@ -30,12 +27,6 @@ function Friend() {
         }
     }, [data])
 
-    useEffect(() => {
-        if (queryNew.data && queryNew.users) {
-            const { users } = queryFriend.data
-            setFriend({ ...friend, newFriend: [...users] })
-        }
-    }, [queryNew.data])
     return (
         <div className='w-3/4 mx-auto pb-10 text-gray-800 dark:text-gray-100'>
             <div className="friend-top-tab">
@@ -53,18 +44,18 @@ function Friend() {
             </div>
             <QueryResult loading={loading} data={data} error={error} skeleton={<FriendSkeleton />}>
                 <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Your friend' ? 'block' : 'hidden'}`}>
-                    {friend.confirm?.map(user => <CardFriend user={user} key={user._id} />)}
+                    {friend.confirm?.map(user => <CardFriend user={user} key={user.id} />)}
                 </div>
                 <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Friend waiting' ? 'block' : 'hidden'}`}>
-                    {friend.waiting?.map(user => <CardFriendWaiting user={user} key={user._id} />)}
+                    {friend.waiting?.map(user => <CardFriendWaiting user={user} key={user.id} />)}
                 </div>
                 <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Friend request' ? 'block' : 'hidden'}`}>
-                    {friend.request?.map(user => <CardFriendRequest user={user} key={user._id} />)}
-                </div>
-                <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Find new friend' ? 'block' : 'hidden'}`}>
-                    {friend.newFriend?.map(user => <CardFriendNew user={user} key={user.id} />)}
+                    {friend.request?.map(user => <CardFriendRequest user={user} key={user.id} />)}
                 </div>
             </QueryResult>
+            <div className={`grid grid-cols-4 gap-5 mt-32 ${tab === 'Find new friend' ? 'block' : 'hidden'}`}>
+                <CardFriendNew />
+            </div>
         </div >
     )
 }

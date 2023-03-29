@@ -15,7 +15,7 @@ export const POST_FOR_USER = gql`
             liked
             vision
             totalComment
-            createdAt
+            updatedAt
         }
     }
 `
@@ -29,7 +29,7 @@ export const POST_OF_OWNER = gql`
             totalLike
             vision
             totalComment
-            createdAt
+            updatedAt
         }
     }
 `

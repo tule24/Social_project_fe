@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { SiSocialblade } from 'react-icons/si'
 import { BsBellFill, BsPencilSquare } from 'react-icons/bs'
 import { MdLightMode, MdNightlight } from 'react-icons/md'
+import { TbRefresh } from 'react-icons/tb'
 import { FaUserFriends, FaUser } from 'react-icons/fa'
 import { Tooltip, PostEdit } from '@/components'
 import { SocialContext } from '@/context'
@@ -56,8 +57,8 @@ function Header() {
                     </div>
                 </div>
                 <div className="items-center flex-shrink-0 hidden lg:flex space-x-3 relative">
-                    <Tooltip message={"Theme"} position={"-left-3"}>
-                        <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
+                    <Tooltip message={"Notification"} position={"-left-3"}>
+                        <button className="header-btn"><TbRefresh /></button>
                     </Tooltip>
                     <Tooltip message={"Create Post"} position={"-left-5"}>
                         <button
@@ -78,8 +79,8 @@ function Header() {
                     <Tooltip message={"Friends"} position={"-left-3"}>
                         <Link to={"/friend"} className="header-btn"><FaUserFriends /></Link>
                     </Tooltip>
-                    <Tooltip message={"Notification"} position={"-left-3"}>
-                        <button className="header-btn"><BsBellFill /></button>
+                    <Tooltip message={"Theme"} position={"-left-3"}>
+                        <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
                     <Tooltip message={"Profile"} position={"-left-1"}>
                         <Link to={'/profile'}>{userInfo?.ava ? <img src={userInfo?.ava} alt="ava" className='w-10 rounded-full' loading='lazy' /> : <FaUser />}</Link>

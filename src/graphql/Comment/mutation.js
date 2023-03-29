@@ -38,14 +38,23 @@ export const COMMENT_FRAGMENT = gql`
     fragment CommenEdit on Comment {
         id
         content
+        totalLike
+        totalReplies
     }
 `
 
-export const HANDLE_LIKE_COMMENT = gql`
+export const LIKE_COMMENT = gql`
     mutation Mutation($commentId: ID!) {
-        handleLikeComment(commentId: $commentId) {
+        likeComment(commentId: $commentId) {
             id
-            totalLike
+        }
+    }
+`
+
+export const UNLIKE_COMMENT = gql`
+    mutation Mutation($commentId: ID!) {
+        unlikeComment(commentId: $commentId) {
+            id
         }
     }
 `
@@ -54,6 +63,11 @@ export const CREATE_REPLIES = gql`
     mutation Mutation($commentId: ID!, $content: String!) {
         createReplies(commentId: $commentId, content: $content) {
             id
+            creator {
+              id
+              name
+              ava
+            }
             content
             createdAt
             totalLike
@@ -71,17 +85,33 @@ export const UPDATE_REPLIES = gql`
 `
 
 export const DELETE_REPLIES = gql`
-    mutation Mutation($commentId: ID!) {
-        deleteComment(commentId: $commentId) {
+    mutation Mutation($commentId: ID!, $repliesId: ID!) {
+        deleteReplies(commentId: $commentId, repliesId: $repliesId) {
             id
         }
     }
 `
 
-export const HANDLE_LIKE_REPLIES = gql`
-    mutation Mutation($commentId: ID!) {
-        deleteComment(commentId: $commentId) {
+export const LIKE_REPLIES = gql`
+    mutation Mutation($commentId: ID!, $repliesId: ID!) {
+        likeReplies(commentId: $commentId, repliesId: $repliesId) {
             id
         }
+    }
+`
+
+export const UNLIKE_REPLIES = gql`
+    mutation Mutation($commentId: ID!, $repliesId: ID!) {
+        unlikeReplies(commentId: $commentId, repliesId: $repliesId) {
+            id
+        }
+    }
+`
+
+export const REPLIES_FRAGMENT = gql`
+    fragment RepliesEdit on Replies {
+        id
+        content
+        totalLike
     }
 `

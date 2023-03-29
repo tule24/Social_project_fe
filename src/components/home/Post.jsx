@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AiFillLike, AiOutlineLike, AiOutlineComment } from 'react-icons/ai'
 import { FaUserLock, FaUsers } from 'react-icons/fa'
 import { GiEarthAmerica } from 'react-icons/gi'
@@ -7,15 +7,30 @@ import { PostModal, Slider, PostEdit } from '@/components'
 import parse from 'html-react-parser'
 import { SocialContext } from '@/context'
 import { useMutation } from '@apollo/client'
-import { UPDATE_POST, DELETE_POST } from '@/graphql'
+import { UPDATE_POST, DELETE_POST, LIKE_POST, UNLIKE_POST } from '@/graphql'
+import { likePostService, unlikePostService } from '@/services'
 
 function Post({ post, user }) {
-    const { id, content, media, totalLike, liked, vision, totalComment, createdAt } = post
+    const { id, content, media, vision, totalComment, updatedAt } = post
     const creator = user ? user : post.creator
+    const [liked, setLiked] = useState(post.liked)
+    const [totalLike, setTotalLike] = useState(post.totalLike)
     const { modal, setModal } = useContext(SocialContext)
     const [updatePost] = useMutation(UPDATE_POST)
     const [deletePost] = useMutation(DELETE_POST)
+    const [likePost] = useMutation(LIKE_POST)
+    const [unlikePost] = useMutation(UNLIKE_POST)
 
+    const handleLikePost = () => {
+        setLiked(!liked)
+        if (liked) {
+            setTotalLike(totalLike - 1)
+            unlikePost(unlikePostService(id, setLiked, totalLike, setTotalLike))
+        } else {
+            setTotalLike(totalLike + 1)
+            likePost(likePostService(id, setLiked, totalLike, setTotalLike))
+        }
+    }
     return (
         <div className="flex flex-col w-full p-6 space-y-5 overflow-hidden rounded-lg my-shadow dark:bg-zinc-800 dark:text-gray-100">
             <div className='flex justify-between'>
@@ -23,7 +38,7 @@ function Post({ post, user }) {
                     <img alt="" src={creator?.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
                     <div className="flex flex-col space-y-1">
                         <span className="text-sm font-semibold capitalize">{creator?.name}</span>
-                        <span className="text-xs dark:text-gray-400">{createdAt}</span>
+                        <span className="text-xs dark:text-gray-400">{updatedAt}</span>
                     </div>
                 </div>
                 {user && <button
@@ -53,12 +68,12 @@ function Post({ post, user }) {
             <hr className='border-gray-300 dark:border-gray-500' />
             <div className="flex flex-wrap justify-between text-lg px-2">
                 <div className="flex space-x-10 dark:text-gray-400">
-                    <button className="flex items-center space-x-2 cursor-pointer">
+                    <button className="flex items-center space-x-1" onClick={() => handleLikePost()}>
                         {liked ? <AiFillLike /> : <AiOutlineLike />}
                         <span>{totalLike}</span>
                     </button>
                     <button
-                        className="flex items-center space-x-2 cursor-pointer"
+                        className="flex items-center space-x-1 cursor-pointer"
                         onClick={() => setModal({
                             ...modal,
                             open: true,
@@ -67,6 +82,10 @@ function Post({ post, user }) {
                                 modal={modal}
                                 setModal={setModal}
                                 post={post}
+                                unlikePost={unlikePost}
+                                likePost={likePost}
+                                setLiked={setLiked}
+                                setTotalLike={setTotalLike}
                             />
                         })}>
                         <AiOutlineComment />
