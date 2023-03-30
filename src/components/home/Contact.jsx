@@ -2,12 +2,25 @@ import React, { useContext } from 'react'
 import { AiFillPhone, AiFillMessage } from 'react-icons/ai'
 import { SiMessenger } from 'react-icons/si'
 import { SocialContext } from '@/context'
+import { Link } from 'react-router-dom'
 
 function Contact() {
     const { messageRoom, miniChat, setMiniChat } = useContext(SocialContext)
+    const handleOpenChat = (el) => {
+        if (miniChat.length > 3) {
+            const newMiniChat = [...miniChat]
+            newMiniChat[0] = el
+            setMiniChat([...newMiniChat])
+        } else {
+            setMiniChat([...miniChat, el])
+        }
+    }
     return (
         <div className='fixed space-y-4 h-screen right-0 top-[6rem] w-[20%] px-3 text-gray-800 dark:text-gray-100 shadow-xl'>
-            <h1 className='text-3xl font-semibold tracking-widest flex items-center'>Contacts <SiMessenger className='ml-3' size={20} /></h1>
+            <div className='font-semibold tracking-widest flex items-center'>
+                <h1 className='text-3xl '>Contacts</h1>
+                <Link to={"/chat"} className="ml-3 p-3 rounded-full bg-gray-300 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><SiMessenger /></Link>
+            </div>
             <label htmlFor="Search" className="hidden">Search</label>
             <div className="relative w-full">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2">
@@ -29,13 +42,16 @@ function Contact() {
                         <div className='flex items-center '>
                             <div className="relative flex-shrink-0">
                                 <span className={`absolute bottom-0 right-0 w-3 h-3 border rounded-full text-gray-100 border-gray-900 bg-green-400`} />
-                                <img loading='lazy' src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-300 border-gray-400" />
+                                <img src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-300 border-gray-400" />
                             </div>
-                            <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline' onClick={() => setMiniChat([...miniChat, el])}>{el.user.name}</span>
+                            <div className='flex flex-col'>
+                                <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline' onClick={() => handleOpenChat(el)}>{el.user.name}</span>
+                                <span className='ml-2 text-[12px] text-gray-500'>{el.lastMessage}</span>
+                            </div>
                         </div>
                         <div className='contact-format text-xl space-x-3 '>
                             <AiFillPhone className='contact-btn' />
-                            <AiFillMessage className='contact-btn' onClick={() => setMiniChat([...miniChat, el])} />
+                            <AiFillMessage className='contact-btn' onClick={() => handleOpenChat(el)} />
                         </div>
                     </div>
                 })}

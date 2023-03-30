@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AiFillLike, AiOutlineLike, AiOutlineComment } from 'react-icons/ai'
 import { FaUserLock, FaUsers } from 'react-icons/fa'
 import { GiEarthAmerica } from 'react-icons/gi'
 import { BiEdit } from 'react-icons/bi'
-import { PostModal, Slider, PostEdit } from '@/components'
+import { PostModal, Slider, PostEdit, UserLike } from '@/components'
 import parse from 'html-react-parser'
 import { SocialContext } from '@/context'
 import { useMutation } from '@apollo/client'
@@ -13,6 +13,7 @@ import { likePostService, unlikePostService } from '@/services'
 function Post({ post, user }) {
     const { id, content, media, vision, totalComment, updatedAt } = post
     const creator = user ? user : post.creator
+    const [showLike, setShowLike] = useState(false)
     const [liked, setLiked] = useState(post.liked)
     const [totalLike, setTotalLike] = useState(post.totalLike)
     const { modal, setModal } = useContext(SocialContext)
@@ -68,10 +69,14 @@ function Post({ post, user }) {
             <hr className='border-gray-300 dark:border-gray-500' />
             <div className="flex flex-wrap justify-between text-lg px-2">
                 <div className="flex space-x-10 dark:text-gray-400">
-                    <button className="flex items-center space-x-1" onClick={() => handleLikePost()}>
-                        {liked ? <AiFillLike /> : <AiOutlineLike />}
-                        <span>{totalLike}</span>
-                    </button>
+                    <div className="flex items-center space-x-1 relative">
+                        <button onClick={() => handleLikePost()}>{liked ? <AiFillLike /> : <AiOutlineLike />}</button>
+                        {totalLike > 0
+                            ? <span className='hover:underline hover:text-blue-600 cursor-pointer' onClick={() => setShowLike(true)}>{totalLike}</span>
+                            : <span>{totalLike}</span>
+                        }
+                        {showLike && <UserLike postId={id} setShowLike={setShowLike}/>}
+                    </div>
                     <button
                         className="flex items-center space-x-1 cursor-pointer"
                         onClick={() => setModal({
@@ -86,6 +91,8 @@ function Post({ post, user }) {
                                 likePost={likePost}
                                 setLiked={setLiked}
                                 setTotalLike={setTotalLike}
+                                liked={liked}
+                                totalLike={totalLike}
                             />
                         })}>
                         <AiOutlineComment />

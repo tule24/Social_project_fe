@@ -10,7 +10,7 @@ function UpdateUser({ user, modal, setModal }) {
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     return (
         <div className='w-full h-full flex items-center flex-col'>
-            <div className='w-1/2 bg-slate-300 py-5 rounded-xl relative'>
+            <div className='w-1/2 bg-gradient-to-r from-indigo-400 to-blue-400 py-5 rounded-xl relative my-shadow'>
                 <button onClick={() => setModal({ ...modal, open: false })} className='absolute right-5 top-5'><AiOutlineCloseCircle size={30} /></button>
                 <h1 className='text-center text-3xl font-semibold tracking-widest'>USER INFORMATION</h1>
                 <div className='w-[70%] mx-auto mt-3'>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { BsSendFill } from 'react-icons/bs'
 import { AiFillLike, AiOutlineComment, AiOutlineCloseCircle, AiOutlineLike } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
@@ -9,8 +9,8 @@ import { COMMENT_OF_POST, CREATE_COMMENT, UPDATE_COMMENT, DELETE_COMMENT, LIKE_C
 import { FiLoader } from 'react-icons/fi'
 import { createCommentService, deleteCommentService, updateCommentService, likeCommentService, unlikeCommentService, likePostService, unlikePostService } from '@/services'
 
-function PostModal({ modal, setModal, post, creator, likePost, unlikePost, setLiked, setTotalLike }) {
-    const { id, content, media, vision, updatedAt, liked, totalLike } = post
+function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost, unlikePost, setLiked, setTotalLike }) {
+    const { id, content, media, vision, updatedAt } = post
     const { loading, error, data } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 } })
     const [createComment] = useMutation(CREATE_COMMENT)
     const [updateComment] = useMutation(UPDATE_COMMENT)
@@ -31,7 +31,7 @@ function PostModal({ modal, setModal, post, creator, likePost, unlikePost, setLi
     const [totalLikeChild, setTotalLikeChild] = useState(totalLike)
     const handleLikePost = () => {
         setLikedChild(!likedChild)
-        if (liked) {
+        if (likedChild) {
             setTotalLikeChild(totalLikeChild - 1)
             unlikePost(unlikePostService(id, setLikedChild, totalLikeChild, setTotalLikeChild))
         } else {

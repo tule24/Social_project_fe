@@ -14,9 +14,11 @@ export const SocialProvider = (({ children }) => {
         const { messageRoomOfUser, ...userInfo } = userData
         const messageRoom = messageRoomOfUser.map(el => {
             const user = el.users.find(u => u.id !== userInfo.id)
+            const { id, lastMessage } = el
             return {
-                id: el.id,
-                user
+                id,
+                user,
+                lastMessage
             }
         })
         setUserInfo({ ...userInfo })

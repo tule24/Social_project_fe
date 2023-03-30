@@ -18,6 +18,7 @@ export const GET_USER_INFO = gql`
                     name
                     ava
                 }
+                lastMessage
             }
         }
     }

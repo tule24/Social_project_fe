@@ -7,5 +7,6 @@ import Slider from "./Slider"
 import MiniChat from "./MiniChat"
 import CmtRep from "./CmtRep"
 import Replies from "./Replies"
+import UserLike from "./UserLike"
 export * from './Skeleton'
-export { Tooltip, Header, ErrorDisplay, LoadingSpiner, QueryResult, Slider, MiniChat, CmtRep, Replies }
+export { Tooltip, Header, ErrorDisplay, LoadingSpiner, QueryResult, Slider, MiniChat, CmtRep, Replies, UserLike }

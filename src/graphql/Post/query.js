@@ -27,9 +27,23 @@ export const POST_OF_OWNER = gql`
             content
             media
             totalLike
+            liked
             vision
             totalComment
             updatedAt
+        }
+    }
+`
+
+export const USER_LIKE_POST = gql`
+    query Query($postId: ID!) {
+        post(postId: $postId) {
+            id
+            userLike {
+                id
+                name
+                ava
+            }
         }
     }
 `

@@ -122,16 +122,22 @@ body {
 .cmt-content {
   @apply bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md w-max max-w-full;
 }
+.cmt-confirm {
+  @apply absolute flex items-start w-max bg-black text-white text-[10px] space-y-1 rounded-lg p-1 -top-[3.5rem] transition-all duration-200 left-9;
+}
 
 .rep-parent {
   @apply flex space-x-2 mb-4 relative;
 }
 .rep-track {
-  @apply absolute w-[20%] z-0 -left-[2.5rem] top-[1.5rem] border-b-2 border-gray-400;
+  @apply absolute w-[15%] z-0 -left-[2.5rem] top-[1.5rem] border-b-2 border-gray-400;
 }
 .rep-ava {
   @apply object-cover w-10 h-10 z-10 rounded-full shadow dark:bg-gray-500 items-start;
 }
 .rep-content {
   @apply bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md w-max text-sm;
+}
+.rep-confirm {
+  @apply absolute flex items-start w-max bg-black text-white text-[10px] space-y-1 rounded-lg p-1 -top-[3.5rem] transition-all duration-200 left-0;
 }

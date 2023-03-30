@@ -103,9 +103,9 @@ function CmtRep({ parentId, obj, opt, updateFunc, updateSer, deleteFunc, deleteS
                         {loading === 'delete' ? <FiLoader className='animate-spin' /> : <AiOutlineDelete />}
                     </button>
                     {
-                        openConfirm && <div className='absolute flex items-start w-max bg-black text-white text-[10px] space-y-1 rounded-lg text-sm p-1 -top-[3.5rem] left-10 transition-all duration-200'>
-                            <p className='w-[5rem]'>Are you sure to delete this?</p>
-                            <div className='flex flex-col space-y-2'>
+                        openConfirm && <div className={opt === 'comment' ? 'cmt-confirm' : 'rep-confirm'}>
+                            <p className='w-[5rem] text-[10px]'>Are you sure to delete this?</p>
+                            <div className='flex flex-col space-y-2 text-[10px]'>
                                 <button className='bg-green-500 px-1 rounded-lg leading-snug hover:bg-green-300' onClick={() => handleDelete()} >Yes</button>
                                 <button className='bg-red-500 px-1 rounded-lg leading-snug hover:bg-red-300' onClick={() => setOpenConfirm(false)}>No</button>
                             </div>

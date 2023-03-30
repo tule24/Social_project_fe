@@ -1,16 +1,18 @@
 import { gql } from "@apollo/client"
 
-export const MESSAGE_ROOM_OF_USER = gql`
-    query User($userId: ID) {
-        user(userId: $userId) {
+export const GET_MESSAGE_ROOM = gql`
+    query Message($roomId: ID!) {
+        getMessageRoom(roomId: $roomId) {
             id
-            messageRoomOfUser {
+            messages {
                 id
-                users {
+                creator {
                     id
                     name
                     ava
                 }
+                content
+                createdAt
             }
         }
     }
