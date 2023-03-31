@@ -14,13 +14,16 @@ export const SocialProvider = (({ children }) => {
         const { messageRoomOfUser, ...userInfo } = userData
         const messageRoom = messageRoomOfUser.map(el => {
             const user = el.users.find(u => u.id !== userInfo.id)
-            const { id, lastMessage } = el
+            const { id, lastMessage, updatedAt } = el
             return {
                 id,
                 user,
-                lastMessage
+                lastMessage,
+                updatedAt,
+                newMessage: false
             }
         })
+        messageRoom.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
         setUserInfo({ ...userInfo })
         setMessageRoom([...messageRoom])
     }

@@ -8,7 +8,7 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import parse from 'html-react-parser'
 import { useDropzone } from 'react-dropzone'
-import { toBase64 } from '@/helper'
+import { formatTime, toBase64 } from '@/helper'
 import { createPostService, updatePostService, deletePostService } from '@/services'
 
 function PostEdit({ user, modal, setModal, post, createPost, updatePost, deletePost }) {
@@ -163,7 +163,7 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
               <img alt="" src={user.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
               <div className="flex flex-col space-y-1">
                 <span className="text-sm font-semibold capitalize">{user.name}</span>
-                <span className="text-xs dark:text-gray-400">{post ? post.updatedAt : 'Just now'}</span>
+                <span className="text-xs dark:text-gray-400">{post ? formatTime(post.updatedAt) : 'Just now'}</span>
               </div>
             </div>
             <button onClick={() => setModal({ ...modal, open: false })}><AiOutlineCloseCircle size={30} /></button>

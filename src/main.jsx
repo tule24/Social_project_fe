@@ -18,9 +18,12 @@ let httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
 const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:4000/graphql',
   connectionParams: {
-    authToken: `Bearer ${localStorage.getItem('accessToken')}`
+    headers: {
+      authorization: `Bearer ${localStorage.getItem('accessToken')}`
+    }
   }
 }))
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('accessToken')
   return {
@@ -30,7 +33,6 @@ const authLink = setContext((_, { headers }) => {
     }
   }
 })
-
 const refreshToken = async () => {
   try {
     const rfToken = localStorage.getItem('refreshToken')
@@ -45,7 +47,6 @@ const refreshToken = async () => {
     throw error
   }
 }
-
 const errorLink = onError(({ forward, graphQLErrors, networkError = {}, operation, response }) => {
   if (graphQLErrors) {
     for (let err of graphQLErrors) {
@@ -85,8 +86,6 @@ const client = new ApolloClient({
   link: splitLink,
   cache: new InMemoryCache
 })
-
-
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ApolloProvider client={client}>

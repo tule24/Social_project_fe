@@ -4,13 +4,15 @@ export const CREATE_MESSAGE = gql`
     mutation createMessage($roomId: ID!, $content: String!) {
         createMessage(roomId: $roomId, content: $content) {
             id
-            user {
+            creator {
                 id
                 name
                 ava
             }
-            content
-            createdAt
+            content {
+                message
+                createdAt
+            }
         }
     }
 `

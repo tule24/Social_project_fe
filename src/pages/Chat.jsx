@@ -1,9 +1,32 @@
-import { Header, HOCModal } from '@/components'
-import React from 'react'
+import { BigChat, Header, HOCModal } from '@/components'
+import React, { useContext, useRef, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { BsClockHistory, BsSendFill } from 'react-icons/bs'
+import { SocialContext } from '@/context'
+import { FiLoader } from 'react-icons/fi'
+import { createMessageService } from '@/services'
+import { CREATE_MESSAGE } from '@/graphql'
+import { useMutation } from '@apollo/client'
+import { formatTime } from '@/helper'
+import { MdFiberNew } from 'react-icons/md'
 
 function Chat() {
+    const { messageRoom, setMessageRoom, userInfo } = useContext(SocialContext)
+    const [createMessage] = useMutation(CREATE_MESSAGE)
+    const [loadingMessage, setLoadingMessage] = useState(false)
+    const [room, setRoom] = useState(null)
+    const msgRef = useRef(null)
+    const handleRoom = (el, i) => {
+        setRoom(el)
+        messageRoom[i].newMessage = false
+        setMessageRoom([...messageRoom])
+    }
+    const handleSubmit = () => {
+        setLoadingMessage(true)
+        const content = msgRef.current.value
+        createMessage(createMessageService(room.id, content, setLoadingMessage))
+        msgRef.current.value = ''
+    }
     return (
         <div className='bg-white dark:bg-black relative'>
             <Header />
@@ -24,88 +47,46 @@ function Chat() {
                             className="w-full py-2 pl-10 text-sm rounded-lg focus:outline-none bg-gray-200 dark:bg-zinc-700 text-gray-100 focus:text-black dark:focus:text-gray-300 focus:bg-gray-300 dark:focus:bg-gray-600 focus:border-violet-400" />
                     </div>
                     <h1 className='my-2 font-semibold text-lg text-center'>Chats</h1>
-                    <div className='flex justify-between items-start border-y border-gray-300 p-2'>
-                        <div className='flex items-center space-x-2'>
-                            <img src="https://i.pravatar.cc/?img=69" alt="ava" className='rounded-full w-10 h-10' />
-                            <div className='flex flex-col'>
-                                <p className='font-semibold capitalize'>Peter</p>
-                                <p className='text-sm text-gray-400'>Last message</p>
+                    {messageRoom?.map((el, i) => {
+                        return <div className='flex justify-between items-start border-t border-gray-300 p-2 cursor-pointer' key={el.id} onClick={() => handleRoom(el, i)}>
+                            <div className='flex items-center space-x-2'>
+                                <img src={el.user.ava} alt="ava" className='rounded-full w-10 h-10' key={el.user.ava} />
+                                <div className='flex flex-col'>
+                                    <p className='font-semibold capitalize'>{el.user.name} {el.newMessage && <MdFiberNew className='text-red-500' />}</p>
+                                    <p className={`text-sm ${el.newMessage ? 'text-black font-semibold' : 'text-gray-400'}`}>{el?.lastMessage?.content || 'You are now connected! Send your first message!'}</p>
+                                </div>
                             </div>
+                            <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> {el?.updatedAt ? formatTime(el.updatedAt) : ''}</p>
                         </div>
-                        <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> 25 min ago</p>
-                    </div>
-                    <div className='flex justify-between items-start border-b border-gray-300 p-2'>
-                        <div className='flex items-center space-x-2'>
-                            <img src="https://i.pravatar.cc/?img=69" alt="ava" className='rounded-full w-10 h-10' />
-                            <div className='flex flex-col'>
-                                <p className='font-semibold capitalize'>Peter</p>
-                                <p className='text-sm text-gray-400'>Last message</p>
-                            </div>
-                        </div>
-                        <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> 25 min ago</p>
-                    </div>
-                    <div className='flex justify-between items-start border-b border-gray-300 p-2'>
-                        <div className='flex items-center space-x-2'>
-                            <img src="https://i.pravatar.cc/?img=69" alt="ava" className='rounded-full w-10 h-10' />
-                            <div className='flex flex-col'>
-                                <p className='font-semibold capitalize'>Peter</p>
-                                <p className='text-sm text-gray-400'>Last message</p>
-                            </div>
-                        </div>
-                        <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> 25 min ago</p>
-                    </div>
-                    <div className='flex justify-between items-start border-b border-gray-300 p-2'>
-                        <div className='flex items-center space-x-2'>
-                            <img src="https://i.pravatar.cc/?img=69" alt="ava" className='rounded-full w-10 h-10' />
-                            <div className='flex flex-col'>
-                                <p className='font-semibold capitalize'>Peter</p>
-                                <p className='text-sm text-gray-400'>Last message</p>
-                            </div>
-                        </div>
-                        <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> 25 min ago</p>
-                    </div>
-                    
+                    })}
                 </div>
                 <div className='bg-gray-200 flex flex-col overflow-auto'>
                     <div className='flex justify-between h-[10%] px-5 shadow bg-gray-300'>
                         <div className='flex items-center space-x-1'>
-                            <img src="https://i.pravatar.cc/?img=69" alt="ava" className='rounded-full w-10 h-10' />
-                            <p className='font-semibold capitalize'>Peter</p>
+                            <img src={room?.user?.ava || '/avatar.png'} alt="ava" className='rounded-full w-10 h-10' />
+                            <p className='font-semibold capitalize'>{room?.user?.name || 'Select user'}</p>
                         </div>
-                        <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> 25 min ago</p>
+                        <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' />{room?.updatedAt ? formatTime(room.updatedAt) : ''}</p>
                     </div>
-                    <div className='flex-grow shadow p-2'>
-                        <div className='flex items-end text-sm'>
-                            <img src="https://i.pravatar.cc/?img=69" alt="ava" className="object-cover w-8 h-8 rounded-full shadow dark:bg-gray-500 mr-1" />
-                            <div className='w-max space-y-1'>
-                                <p className='bg-slate-100 shadow dark:bg-slate-900 py-1 px-2 rounded-md break-words'>
-                                    adadasdasdasdasdlashdasdasjdklhasdasds
-                                </p>
-                                <p className='bg-slate-100 shadow dark:bg-slate-900 py-1 px-2 rounded-md break-words'>
-                                    adadasdasdasdasdlashdasdasjdklhasdasds
-                                </p>
+                    {room
+                        ? <BigChat roomId={room.id} userId={userInfo.id} />
+                        : (
+                            <div className='flex-grow shadow p-2 flex items-end'>
+                                <div className='flex justify-center items-center h-full w-full'>
+                                    <p className='text-sm text-gray-400 text-center'>Select friend to start your conversation!</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className='flex items-end text-sm justify-end'>
-                            <div className='w-max space-y-1'>
-                                <p className='bg-blue-300 shadow py-1 px-2 rounded-md break-words'>
-                                    adadasdasdasdasdlashdasdasjdklhasdasds
-                                </p>
-                                <p className='bg-blue-300 shadow py-1 px-2 rounded-md break-words'>
-                                    adadasdasdasdasdlashdasdasjdklhasdasds
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                        )}
                     <div className='h-[10%] py-3'>
                         <div className='w-[95%] flex mx-auto my-auto rounded-full py-2 bg-gray-100'>
                             <input
+                                ref={msgRef}
                                 type='text'
                                 placeholder='Type your message'
                                 className='bg-white bg-opacity-0 w-[95%] pl-5 placeholder:text-sm text-black dark:text-gray-200 focus:outline-none focus:border-none'
                             />
-                            <button className='icon flex items-center px-4 cursor-pointer'>
-                                <BsSendFill size={20} />
+                            <button className='icon flex items-center px-4 cursor-pointer' onClick={() => handleSubmit()}>
+                                {loadingMessage ? <FiLoader className='animate-spin' size={20} /> : <BsSendFill size={20} />}
                             </button>
                         </div>
                     </div>
@@ -113,7 +94,7 @@ function Chat() {
             </div>
             <HOCModal />
             <ToastContainer closeButton={true} position='top-right' style={{ width: "max-content" }} />
-        </div>
+        </div >
     )
 }
 

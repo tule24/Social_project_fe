@@ -4,9 +4,8 @@ import ErrorDisplay from "./ErrorDisplay"
 import LoadingSpiner from "./LoadingSpiner"
 import QueryResult from "./QueryResult"
 import Slider from "./Slider"
-import MiniChat from "./MiniChat"
 import CmtRep from "./CmtRep"
 import Replies from "./Replies"
 import UserLike from "./UserLike"
 export * from './Skeleton'
-export { Tooltip, Header, ErrorDisplay, LoadingSpiner, QueryResult, Slider, MiniChat, CmtRep, Replies, UserLike }
+export { Tooltip, Header, ErrorDisplay, LoadingSpiner, QueryResult, Slider, CmtRep, Replies, UserLike }

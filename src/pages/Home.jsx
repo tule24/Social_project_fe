@@ -1,7 +1,6 @@
-import React from 'react'
 import { Contact, Post, Weather, Calendar, QueryResult, PostSkeleton } from '@/components'
 import { POST_FOR_USER } from '@/graphql'
-import { useQuery } from '@apollo/client'
+import { useQuery,  } from '@apollo/client'
 
 function Home() {
     const { loading, error, data } = useQuery(POST_FOR_USER, { variables: { page: 1 } })

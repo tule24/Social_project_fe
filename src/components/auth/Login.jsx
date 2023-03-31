@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { HiOutlineMail, HiFingerPrint } from 'react-icons/hi'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '@/graphql'
@@ -12,7 +12,6 @@ import { MyTextInput } from '@/components'
 
 function Login() {
     const { setUserInfo } = useContext(SocialContext)
-    const navigate = useNavigate()
     const [show, setShow] = useState(false)
     const [login, { data, loading, error }] = useMutation(LOGIN)
 
@@ -27,7 +26,7 @@ function Login() {
             localStorage.setItem('accessToken', token)
             localStorage.setItem('refreshToken', refreshToken)
             setUserInfo(user)
-            navigate('/')
+            window.location.href = '/'
         }
     }, [data])
 

@@ -11,9 +11,12 @@ export const GET_MESSAGE_ROOM = gql`
                     name
                     ava
                 }
-                content
-                createdAt
+                content {
+                    message
+                    createdAt
+                }
             }
+            updatedAt
         }
     }
 `

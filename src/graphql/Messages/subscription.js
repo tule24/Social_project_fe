@@ -4,13 +4,16 @@ export const MESSAGE_SUBSCRIPTION = gql`
     subscription Subscription {
         messageCreated {
             id
-            user {
-                  id
-                  name
-                  ava
+            roomId
+            creator {
+                id
+                name
+                ava
             }
-            content
-            createdAt
+            content {
+                message
+                createdAt
+            }
         }
     }
 `

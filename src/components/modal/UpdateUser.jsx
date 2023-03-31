@@ -5,9 +5,9 @@ import * as Yup from 'yup'
 import styles from '@/styles/Form.module.css'
 import { MyTextInput } from '@/components'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 function UpdateUser({ user, modal, setModal }) {
-    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     return (
         <div className='w-full h-full flex items-center flex-col'>
             <div className='w-1/2 bg-gradient-to-r from-indigo-400 to-blue-400 py-5 rounded-xl relative my-shadow'>

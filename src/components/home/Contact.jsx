@@ -1,18 +1,25 @@
 import React, { useContext } from 'react'
-import { AiFillPhone, AiFillMessage } from 'react-icons/ai'
+import { AiFillMessage } from 'react-icons/ai'
+import { MdFiberNew } from 'react-icons/md'
 import { SiMessenger } from 'react-icons/si'
 import { SocialContext } from '@/context'
 import { Link } from 'react-router-dom'
+import { formatTime } from '@/helper'
 
 function Contact() {
-    const { messageRoom, miniChat, setMiniChat } = useContext(SocialContext)
-    const handleOpenChat = (el) => {
-        if (miniChat.length > 3) {
-            const newMiniChat = [...miniChat]
-            newMiniChat[0] = el
-            setMiniChat([...newMiniChat])
-        } else {
-            setMiniChat([...miniChat, el])
+    const { messageRoom, miniChat, setMiniChat, setMessageRoom } = useContext(SocialContext)
+    const handleOpenChat = (el, i) => {
+        const checkExist = miniChat.find(chat => chat.id === el.id)
+        if (!checkExist) {
+            if (miniChat.length > 3) {
+                const newMiniChat = [...miniChat]
+                newMiniChat[0] = el
+                setMiniChat([...newMiniChat])
+            } else {
+                setMiniChat([el, ...miniChat])
+            }
+            messageRoom[i].newMessage = false
+            setMessageRoom([...messageRoom])
         }
     }
     return (
@@ -37,7 +44,7 @@ function Contact() {
                     className="w-full py-2 pl-10 text-sm border border-gray-300 dark:border-zinc-700 rounded-full focus:outline-none bg-gray-200 dark:bg-zinc-700 text-gray-100 focus:text-black dark:focus:text-gray-300 focus:bg-gray-300 dark:focus:bg-gray-600 focus:border-violet-400" />
             </div>
             <div className='space-y-6'>
-                {messageRoom?.map(el => {
+                {messageRoom?.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map((el, i) => {
                     return <div className='flex items-center justify-between' key={el.id}>
                         <div className='flex items-center '>
                             <div className="relative flex-shrink-0">
@@ -45,12 +52,15 @@ function Contact() {
                                 <img src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-300 border-gray-400" />
                             </div>
                             <div className='flex flex-col'>
-                                <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline' onClick={() => handleOpenChat(el)}>{el.user.name}</span>
-                                <span className='ml-2 text-[12px] text-gray-500'>{el.lastMessage}</span>
+                                <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline flex' onClick={() => handleOpenChat(el, i)}>
+                                    {el.user.name}
+                                    {el.newMessage && <MdFiberNew className='text-red-500' />}
+                                </span>
+                                <span className={`ml-2 text-[12px] ${el.newMessage ? 'text-black font-semibold' : 'text-gray-500'}`}>{el?.lastMessage?.content || 'You are now connected! Send your first message!'}</span>
                             </div>
                         </div>
-                        <div className='contact-format text-xl space-x-3 '>
-                            <AiFillPhone className='contact-btn' />
+                        <div className='contact-format text-xl space-x-2 '>
+                            <span className='text-[10px]'>{formatTime(el.updatedAt)}</span>
                             <AiFillMessage className='contact-btn' onClick={() => handleOpenChat(el)} />
                         </div>
                     </div>

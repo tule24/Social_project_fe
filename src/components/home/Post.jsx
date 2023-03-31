@@ -9,6 +9,7 @@ import { SocialContext } from '@/context'
 import { useMutation } from '@apollo/client'
 import { UPDATE_POST, DELETE_POST, LIKE_POST, UNLIKE_POST } from '@/graphql'
 import { likePostService, unlikePostService } from '@/services'
+import { formatTime } from '@/helper'
 
 function Post({ post, user }) {
     const { id, content, media, vision, totalComment, updatedAt } = post
@@ -39,7 +40,7 @@ function Post({ post, user }) {
                     <img alt="" src={creator?.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
                     <div className="flex flex-col space-y-1">
                         <span className="text-sm font-semibold capitalize">{creator?.name}</span>
-                        <span className="text-xs dark:text-gray-400">{updatedAt}</span>
+                        <span className="text-xs dark:text-gray-400">{formatTime(updatedAt)}</span>
                     </div>
                 </div>
                 {user && <button
@@ -75,7 +76,7 @@ function Post({ post, user }) {
                             ? <span className='hover:underline hover:text-blue-600 cursor-pointer' onClick={() => setShowLike(true)}>{totalLike}</span>
                             : <span>{totalLike}</span>
                         }
-                        {showLike && <UserLike postId={id} setShowLike={setShowLike}/>}
+                        {showLike && <UserLike postId={id} setShowLike={setShowLike} />}
                     </div>
                     <button
                         className="flex items-center space-x-1 cursor-pointer"
