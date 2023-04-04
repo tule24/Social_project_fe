@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client"
 
 export const POST_FOR_USER = gql`
-    query Query($page: Int!) {
-        postForUser(page: $page) {
+    query Query($page: Int, $limit: Int) {
+        postForUser(page: $page, limit: $limit) {
             id
             creator {
               id
@@ -22,8 +22,8 @@ export const POST_FOR_USER = gql`
 `
 
 export const POST_OF_USER = gql`
-    query Query($userId: ID!, $page: Int!, ) {
-        postOfUser(userId: $userId, page: $page) {
+    query Query($userId: ID!, $page: Int, $limit: Int) {
+        postOfUser(userId: $userId, page: $page, limit: $limit) {
             id
             content
             media
@@ -38,8 +38,8 @@ export const POST_OF_USER = gql`
 `
 
 export const POST_OF_OWNER = gql`
-    query Query($page: Int!) {
-        postOfOwner(page: $page) {
+    query Query($page: Int, $limit: Int) {
+        postOfOwner(page: $page, limit: $limit) {
             id
             content
             media

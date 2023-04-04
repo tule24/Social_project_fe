@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client"
 
 export const COMMENT_OF_POST = gql`
-    query CommentOfPost($postId: ID!, $page: Int!) {
-      commentOfPost(postId: $postId, page: $page) {
+    query CommentOfPost($postId: ID!, $page: Int, $limit: Int) {
+      commentOfPost(postId: $postId, page: $page, limit: $limit) {
         id
         creator {
           id
@@ -19,8 +19,8 @@ export const COMMENT_OF_POST = gql`
 `
 
 export const REPLIES_OF_COMMENT = gql`
-    query RepliesOfComment($commentId: ID!, $page: Int!) {
-      repliesOfComment(commentId: $commentId, page: $page) {
+    query RepliesOfComment($commentId: ID!, $page: Int, $limit: Int) {
+      repliesOfComment(commentId: $commentId, page: $page, limit: $limit) {
         id
         creator {
           id

@@ -55,8 +55,8 @@ export const GET_FRIEND_LIST = gql`
 `
 
 export const GET_NEW_FRIEND = gql`
-    query User {
-        users {
+    query User ($page: Int, $limit: Int) {
+        users (page: $page, limit: $limit) {
             id
             name
             ava
