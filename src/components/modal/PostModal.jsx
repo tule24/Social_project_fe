@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BsSendFill } from 'react-icons/bs'
 import { AiFillLike, AiOutlineComment, AiOutlineCloseCircle, AiOutlineLike } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
@@ -9,6 +9,7 @@ import { COMMENT_OF_POST, CREATE_COMMENT, UPDATE_COMMENT, DELETE_COMMENT, LIKE_C
 import { FiLoader } from 'react-icons/fi'
 import { createCommentService, deleteCommentService, updateCommentService, likeCommentService, unlikeCommentService, likePostService, unlikePostService } from '@/services'
 import { formatTime } from '@/helper'
+import { FaUserLock, FaUsers } from 'react-icons/fa'
 
 function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost, unlikePost, setLiked, setTotalLike }) {
     const { id, content, media, vision, updatedAt } = post

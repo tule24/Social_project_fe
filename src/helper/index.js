@@ -21,6 +21,6 @@ export const formatTime = (input) => {
 }
 
 export const minifyText = (input, len) => {
-    const text = input.address.substring(0, len)
-    return `${text}..`
+    const text = input.length > len ? input.substring(0, len).concat('...') : input
+    return text
 }

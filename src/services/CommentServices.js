@@ -1,3 +1,4 @@
+import { cache } from '@/ApolloProvider'
 import { COMMENT_FRAGMENT, COMMENT_OF_POST, POST_FRAGMENT } from '@/graphql'
 import { toast } from 'react-toastify'
 
@@ -147,5 +148,19 @@ export const unlikeCommentService = (commentId, setLiked, totalLike, setTotalLik
             setLiked(true)
             setTotalLike(totalLike + 1)
         }
+    }
+}
+
+export const updateLikeComment = (commentId, totalLike) => {
+    const commentUpdate = cache.readFragment({
+        id: `Comment:${commentId}`,
+        fragment: COMMENT_FRAGMENT
+    })
+    if (commentUpdate) {
+        cache.writeFragment({
+            id: `Comment:${commentId}`,
+            fragment: COMMENT_FRAGMENT,
+            data: { ...commentUpdate, totalLike }
+        })
     }
 }

@@ -7,13 +7,13 @@ import { PostModal, Slider, PostEdit, UserLike } from '@/components'
 import parse from 'html-react-parser'
 import { SocialContext } from '@/context'
 import { useMutation } from '@apollo/client'
-import { UPDATE_POST, DELETE_POST, LIKE_POST, UNLIKE_POST } from '@/graphql'
+import { UPDATE_POST, DELETE_POST, LIKE_POST, UNLIKE_POST, USER_LIKE_POST } from '@/graphql'
 import { likePostService, unlikePostService } from '@/services'
 import { formatTime } from '@/helper'
 
 function Post({ post, user }) {
     const { id, content, media, vision, totalComment, updatedAt } = post
-    const creator = user ? user : post.creator
+    const creator = post.creator ? post.creator : user
     const [showLike, setShowLike] = useState(false)
     const [liked, setLiked] = useState(post.liked)
     const [totalLike, setTotalLike] = useState(post.totalLike)
@@ -27,10 +27,10 @@ function Post({ post, user }) {
         setLiked(!liked)
         if (liked) {
             setTotalLike(totalLike - 1)
-            unlikePost(unlikePostService(id, setLiked, totalLike, setTotalLike))
+            unlikePost(unlikePostService(id, setLiked, totalLike, setTotalLike, user))
         } else {
             setTotalLike(totalLike + 1)
-            likePost(likePostService(id, setLiked, totalLike, setTotalLike))
+            likePost(likePostService(id, setLiked, totalLike, setTotalLike, user))
         }
     }
     return (
@@ -43,7 +43,7 @@ function Post({ post, user }) {
                         <span className="text-xs dark:text-gray-400">{formatTime(updatedAt)}</span>
                     </div>
                 </div>
-                {user && <button
+                {!post.creator && <button
                     className='bg-black bg-opacity-10 rounded-full w-12 h-12 flex items-center justify-center'
                     onClick={() => setModal({
                         ...modal,
@@ -76,7 +76,12 @@ function Post({ post, user }) {
                             ? <span className='hover:underline hover:text-blue-600 cursor-pointer' onClick={() => setShowLike(true)}>{totalLike}</span>
                             : <span>{totalLike}</span>
                         }
-                        {showLike && <UserLike postId={id} setShowLike={setShowLike} />}
+                        {showLike && <UserLike
+                            query={USER_LIKE_POST}
+                            args={{ postId: id }}
+                            setShowLike={setShowLike}
+                            opt='post'
+                        />}
                     </div>
                     <button
                         className="flex items-center space-x-1 cursor-pointer"

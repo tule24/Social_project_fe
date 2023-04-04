@@ -8,7 +8,7 @@ import { FiLoader } from 'react-icons/fi'
 
 function CardFriendNew() {
     const [isloading, setIsLoading] = useState('')
-    const { data, loading, error } = useQuery(GET_NEW_FRIEND)
+    const { subscribeToMore, data, loading, error } = useQuery(GET_NEW_FRIEND)
     const [addFriend] = useMutation(ADD_FRIEND)
     const handleAddFriend = (friendId) => {
         setIsLoading(friendId)

@@ -59,7 +59,6 @@ export const UNFRIEND = gql`
 
 export const FRIEND_FRAGMENT = gql`
     fragment FriendUpdate on Friend {
-        id
-        vision
+        status
     }
 `

@@ -15,6 +15,7 @@ export const POST_FOR_USER = gql`
             liked
             vision
             totalComment
+            createdAt
             updatedAt
         }
     }
@@ -30,6 +31,23 @@ export const POST_OF_OWNER = gql`
             liked
             vision
             totalComment
+            createdAt
+            updatedAt
+        }
+    }
+`
+
+export const POST_BY_ID = gql`
+    query Post($postId: ID!) {
+        post(postId: $postId) {
+            id
+            content
+            media
+            totalLike
+            liked
+            vision
+            totalComment
+            createdAt
             updatedAt
         }
     }
@@ -44,6 +62,15 @@ export const USER_LIKE_POST = gql`
                 name
                 ava
             }
+        }
+    }
+`
+export const USER_LIKE_FRAGMENT = gql`
+    fragment Userlike on Post {
+        userLike {
+            id
+            name
+            ava
         }
     }
 `

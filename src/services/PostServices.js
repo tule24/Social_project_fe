@@ -1,4 +1,5 @@
-import { POST_FOR_USER, POST_OF_OWNER, POST_FRAGMENT } from '@/graphql'
+import { cache } from '@/ApolloProvider'
+import { POST_FOR_USER, POST_OF_OWNER, POST_FRAGMENT, USER_LIKE_FRAGMENT } from '@/graphql'
 import { toast } from 'react-toastify'
 export const createPostService = (postInput, modal, setModal) => {
     return {
@@ -95,7 +96,7 @@ export const deletePostService = (postId, modal, setModal) => {
     }
 }
 
-export const likePostService = (postId, setLiked, totalLike, setTotalLike) => {
+export const likePostService = (postId, setLiked, totalLike, setTotalLike, user) => {
     return {
         variables: {
             postId
@@ -106,6 +107,12 @@ export const likePostService = (postId, setLiked, totalLike, setTotalLike) => {
                 const totalLike = postUpdate.totalLike + 1
                 cache.writeFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT, data: { ...postUpdate, totalLike, liked: true } })
             }
+
+            const userLikeUpdate = cache.readFragment({ id: `Post:${postId}`, fragment: USER_LIKE_FRAGMENT })
+            if (userLikeUpdate) {
+                const newUserLike = [...userLikeUpdate.userLike, { id: user.id, name: user.name, ava: user.ava }]
+                cache.writeFragment({ id: `Post:${postId}`, fragment: USER_LIKE_FRAGMENT, data: { ...userLikeUpdate, userLike: [...newUserLike] } })
+            }
         },
         onError: (error) => {
             setLiked(false)
@@ -114,7 +121,7 @@ export const likePostService = (postId, setLiked, totalLike, setTotalLike) => {
     }
 }
 
-export const unlikePostService = (postId, setLiked, totalLike, setTotalLike) => {
+export const unlikePostService = (postId, setLiked, totalLike, setTotalLike, user) => {
     return {
         variables: {
             postId
@@ -125,10 +132,23 @@ export const unlikePostService = (postId, setLiked, totalLike, setTotalLike) => 
                 const totalLike = postUpdate.totalLike - 1
                 cache.writeFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT, data: { ...postUpdate, totalLike, liked: false } })
             }
+
+            const userLikeUpdate = cache.readFragment({ id: `Post:${postId}`, fragment: USER_LIKE_FRAGMENT })
+            if (userLikeUpdate) {
+                const newUserLike = userLikeUpdate.userLike.filter(el => el.id !== user.id)
+                cache.writeFragment({ id: `Post:${postId}`, fragment: USER_LIKE_FRAGMENT, data: { ...userLikeUpdate, userLike: [...newUserLike] } })
+            }
         },
         onError: (error) => {
             setLiked(true)
             setTotalLike(totalLike + 1)
         }
+    }
+}
+
+export const updateLikePost = (postId, totalLike) => {
+    const postUpdate = cache.readFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT })
+    if (postUpdate) {
+        cache.writeFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT, data: { ...postUpdate, totalLike} })
     }
 }

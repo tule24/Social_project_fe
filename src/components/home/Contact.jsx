@@ -4,7 +4,7 @@ import { MdFiberNew } from 'react-icons/md'
 import { SiMessenger } from 'react-icons/si'
 import { SocialContext } from '@/context'
 import { Link } from 'react-router-dom'
-import { formatTime } from '@/helper'
+import { formatTime, minifyText } from '@/helper'
 
 function Contact() {
     const { messageRoom, miniChat, setMiniChat, setMessageRoom } = useContext(SocialContext)
@@ -56,7 +56,7 @@ function Contact() {
                                     {el.user.name}
                                     {el.newMessage && <MdFiberNew className='text-red-500' />}
                                 </span>
-                                <span className={`ml-2 text-[12px] ${el.newMessage ? 'text-black font-semibold' : 'text-gray-500'}`}>{el?.lastMessage?.content || 'You are now connected! Send your first message!'}</span>
+                                <span className={`ml-2 text-[12px] ${el.newMessage ? 'text-black font-semibold' : 'text-gray-500'}`}>{el?.lastMessage?.content ? minifyText(el.lastMessage.content, 15) : 'Send message!'}</span>
                             </div>
                         </div>
                         <div className='contact-format text-xl space-x-2 '>

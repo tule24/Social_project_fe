@@ -13,9 +13,9 @@ function HomeLayout() {
     setMiniChat([...newMiniChat])
   }
 
-  const { data, error } = useSubscription(MESSAGE_SUBSCRIPTION)
+  const { error, data } = useSubscription(MESSAGE_SUBSCRIPTION)
   useEffect(() => {
-    if (data && data.messageCreated && data.messageCreated) {
+    if (data && data.messageCreated) {
       const roomId = data.messageCreated.roomId
       const newMsg = data.messageCreated.content.pop()
       const creator = data.messageCreated.creator
@@ -29,8 +29,9 @@ function HomeLayout() {
     }
   }, [data])
   useEffect(() => {
-    console.log(error)
+    error && console.log(error)
   }, [error])
+
   return (
     <div className='bg-white dark:bg-black relative'>
       <Header />

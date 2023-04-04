@@ -2,19 +2,22 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SiSocialblade } from 'react-icons/si'
 import { BsBellFill, BsPencilSquare } from 'react-icons/bs'
-import { MdLightMode, MdNightlight } from 'react-icons/md'
+import { MdFiberNew, MdLightMode, MdNightlight } from 'react-icons/md'
 import { TbRefresh } from 'react-icons/tb'
 import { FaUserFriends, FaUser } from 'react-icons/fa'
-import { Tooltip, PostEdit } from '@/components'
+import { Tooltip, PostEdit, Notification } from '@/components'
 import { SocialContext } from '@/context'
-import { GET_USER_INFO, CREATE_POST } from '@/graphql'
-import { useMutation, useQuery } from '@apollo/client'
+import { GET_USER_INFO, CREATE_POST, NOTIFICATION_SUBSCRIPTION } from '@/graphql'
+import { useMutation, useQuery, useSubscription } from '@apollo/client'
+import { notificationService } from '@/services'
 
 function Header() {
     const { loading, error, data } = useQuery(GET_USER_INFO)
     const [createPost] = useMutation(CREATE_POST)
     const { setModal, modal, handleInit, userInfo } = useContext(SocialContext)
     const [theme, setTheme] = useState('')
+    const [openNoti, setOpenNoti] = useState(false)
+    const [isNewNoti, setIsNewNoti] = useState(false)
 
     useEffect(() => {
         if (theme === 'dark') {
@@ -30,6 +33,25 @@ function Header() {
     }, [data])
     const changeTheme = () => {
         setTheme(theme === "dark" ? "" : "dark")
+    }
+
+    const notiSub = useSubscription(NOTIFICATION_SUBSCRIPTION)
+    useEffect(() => {
+        const { data } = notiSub
+        if (data && data.notificationCreated) {
+            data.notificationCreated.option !== 'unfriend' && setIsNewNoti(true)
+            notificationService(data.notificationCreated)
+        }
+    }, [notiSub.data])
+    useEffect(() => {
+        const { error } = notiSub
+        if (error) {
+            console.log(error)
+        }
+    }, [notiSub.error])
+    const handleClickNoti = () => {
+        setOpenNoti(!openNoti)
+        setIsNewNoti(false)
     }
     return (
         <header className="py-5 px-10 bg-gray-100 dark:bg-zinc-800 dark:text-gray-100 shadow-md fixed left-0 right-0 z-40">
@@ -82,16 +104,18 @@ function Header() {
                     <Tooltip message={"Theme"} position={"-left-3"}>
                         <button className="header-btn" onClick={changeTheme}>{theme === "dark" ? <MdNightlight /> : <MdLightMode />}</button>
                     </Tooltip>
+                    <Tooltip message={"Notification"} position={"-left-3"}>
+                        <button className="header-btn relative" onClick={() => handleClickNoti()}>
+                            <BsBellFill />
+                            {isNewNoti && <MdFiberNew className='text-red-500 absolute top-0 right-0 text-lg' />}
+                        </button>
+                    </Tooltip>
                     <Tooltip message={"Profile"} position={"-left-1"}>
                         <Link to={'/profile'}>{userInfo?.ava ? <img src={userInfo?.ava} alt="ava" className='w-10 rounded-full' loading='lazy' /> : <FaUser />}</Link>
                     </Tooltip>
                 </div>
-                <button className="p-4 lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6 text-gray-100">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
             </div >
+            {openNoti && <Notification setOpenNoti={setOpenNoti}  modal={modal} setModal={setModal} user={userInfo}/>}
         </header >
     )
 }

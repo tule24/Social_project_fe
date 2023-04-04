@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Replies } from '@/components'
+import { Replies, UserLike } from '@/components'
 import { BsClockHistory } from 'react-icons/bs'
 import { AiFillLike, AiOutlineComment, AiOutlineDelete, AiOutlineEdit, AiOutlineLike } from 'react-icons/ai'
 import { FiLoader } from 'react-icons/fi'
 import { SocialContext } from '@/context'
+import { USER_LIKE_COMMENT, USER_LIKE_REPLIES } from '@/graphql'
 
 function CmtRep({ parentId, obj, opt, updateFunc, updateSer, deleteFunc, deleteSer, likeFunc, likeSer, unlikeFunc, unlikeSer }) {
     const { userInfo } = useContext(SocialContext)
@@ -13,6 +14,8 @@ function CmtRep({ parentId, obj, opt, updateFunc, updateSer, deleteFunc, deleteS
     const [loading, setLoading] = useState('')
     const [text, setText] = useState(content)
     const [editText, setEditText] = useState(false)
+    const [showLike, setShowLike] = useState(false)
+
     const resizeTextArea = () => {
         textRef.current.style.height = "auto";
         textRef.current.style.height = textRef.current.scrollHeight + "px";
@@ -86,10 +89,19 @@ function CmtRep({ parentId, obj, opt, updateFunc, updateSer, deleteFunc, deleteS
                     </div>}
                 </div>
                 <div className='flex items-center text-sm space-x-3 relative'>
-                    <button className="cmt-rep-btn" onClick={() => handleLikePost()}>
-                        {liked ? <AiFillLike /> : <AiOutlineLike />}
-                        <span>{totalLike}</span>
-                    </button>
+                    <div className="cmt-rep-btn relative" >
+                        <button onClick={() => handleLikePost()}>{liked ? <AiFillLike /> : <AiOutlineLike />}</button>
+                        {totalLike > 0
+                            ? <span className='hover:underline hover:text-blue-600 cursor-pointer' onClick={() => setShowLike(true)}>{totalLike}</span>
+                            : <span>{totalLike}</span>
+                        }
+                        {showLike && <UserLike
+                            query={opt === 'comment' ? USER_LIKE_COMMENT : USER_LIKE_REPLIES}
+                            args={opt === 'comment' ? { commentId: id } : { commentId: parentId, repliesId: id }}
+                            opt={opt}
+                            setShowLike={setShowLike}
+                        />}
+                    </div>
                     {totalReplies !== undefined && (
                         <button className="cmt-rep-btn" onClick={() => setOpenRep(!openRep)}>
                             <AiOutlineComment />

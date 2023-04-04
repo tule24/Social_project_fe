@@ -26,7 +26,6 @@ function Friend() {
             })
         }
     }, [data])
-
     return (
         <div className='w-3/4 mx-auto pb-10 text-gray-800 dark:text-gray-100'>
             <div className="friend-top-tab">

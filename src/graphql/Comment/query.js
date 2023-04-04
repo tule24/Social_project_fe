@@ -34,3 +34,29 @@ export const REPLIES_OF_COMMENT = gql`
       }
     }
 `
+
+export const USER_LIKE_COMMENT = gql`
+    query Query($commentId: ID!) {
+      commentById(commentId: $commentId) {
+            id
+            userLike {
+                id
+                name
+                ava
+            }
+        }
+    }
+`
+
+export const USER_LIKE_REPLIES = gql`
+    query Query($commentId: ID!, $repliesId: ID!) {
+      repliesById(commentId: $commentId, repliesId: $repliesId) {
+            id
+            userLike {
+                id
+                name
+                ava
+            }
+        }
+    }
+`
