@@ -11,18 +11,6 @@ export const REGISTER = gql`
 export const LOGIN = gql`
     mutation Mutation($loginInput: loginInput!) {
         login(loginInput: $loginInput) {
-            user {
-                id
-                ava
-                messageRoomOfUser {
-                    id
-                    users {
-                        id
-                        name
-                        ava
-                    }
-                }
-            }
             token
             refreshToken
         }

@@ -21,9 +21,25 @@ export const POST_FOR_USER = gql`
     }
 `
 
+export const POST_OF_USER = gql`
+    query Query($userId: ID!, $page: Int!, ) {
+        postOfUser(userId: $userId, page: $page) {
+            id
+            content
+            media
+            totalLike
+            liked
+            vision
+            totalComment
+            createdAt
+            updatedAt
+        }
+    }
+`
+
 export const POST_OF_OWNER = gql`
     query Query($page: Int!) {
-        postOfUser(page: $page) {
+        postOfOwner(page: $page) {
             id
             content
             media

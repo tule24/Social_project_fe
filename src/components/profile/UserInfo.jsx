@@ -1,15 +1,20 @@
 import React from 'react'
-import { BiEnvelope, BiPhone, BiHome, BiEdit, BiCake } from 'react-icons/bi'
+import { BiEnvelope, BiPhone, BiHome, BiEdit, BiCake, BiCamera } from 'react-icons/bi'
 import { BsClockHistory } from 'react-icons/bs'
-import { UpdateUser } from '@/components'
+import { UpdateUser, UpdateAva } from '@/components'
 
 function UserInfo({ user, modal, setModal }) {
     return (
         <div className="flex flex-col max-w-md p-4 mx-auto rounded-lg dark:text-gray-100 dark:bg-zinc-800 my-shadow">
-            <img src={user?.ava} alt="ava" className="w-32 h-32 mx-auto rounded-full dark:bg-gray-500 aspect-square" loading='lazy'/>
+            <div className='relative group'>
+                <img src={user?.ava} alt="ava" className="w-32 h-32 mx-auto rounded-full dark:bg-gray-500 aspect-square" loading='lazy' />
+                <div className='hidden absolute w-32 h-32 bg-black/30 top-0 left-1/2 -translate-x-1/2 rounded-full group-hover:flex items-center justify-center cursor-pointer' onClick={() => setModal({ ...modal, open: true, component: <UpdateAva user={user} modal={modal} setModal={setModal} /> })}>
+                    <BiCamera className='text-white/50' size={40}/>
+                </div>
+            </div>
             <div className="space-y-4 divide-y divide-gray-700">
                 <div className="my-2 space-y-1">
-                    <h2 className="text-xl font-semibold sm:text-2xl text-center capitalize">{user?.name} <sup><BiEdit className='inline cursor-pointer' onClick={() => setModal({ ...modal, open: true, component: <UpdateUser user={user} modal={modal} setModal={setModal} /> })} /></sup></h2>
+                    <h2 className="text-xl font-semibold sm:text-2xl text-center capitalize">{user?.name} {modal && <sup><BiEdit className='inline cursor-pointer' onClick={() => setModal({ ...modal, open: true, component: <UpdateUser user={user} modal={modal} setModal={setModal} /> })} /></sup>}</h2>
                 </div>
                 <div className="space-y-2 pt-5">
                     <p className='flex items-center flex-wrap'><BiCake className='mr-1 inline' />DOB: &nbsp;<span className='font-semibold'>{user?.dob.split(',')[0] || ""}</span></p>

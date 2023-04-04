@@ -22,11 +22,19 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
     const [loadingComment, setLoadingComment] = useState(false)
 
     const commentRef = useRef(null)
-    const handleComment = async () => {
-        setLoadingComment(true)
+    const handleKeydown = (e) => {
+        if (e.keyCode === 13 && e.shiftKey === false) {
+            e.preventDefault()
+            handleSubmit()
+        }
+    }
+    const handleSubmit = async () => {
         const content = commentRef.current.value
-        createComment(createCommentService(id, content, setLoadingComment))
-        commentRef.current.value = ''
+        if (content.trim() !== '') {
+            setLoadingComment(true)
+            createComment(createCommentService(id, content, setLoadingComment))
+            commentRef.current.value = ''
+        }
     }
 
     const [likedChild, setLikedChild] = useState(liked)
@@ -107,14 +115,17 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
                     </QueryResult>
                 </div>
                 <div className='flex border-t border-gray-400 p-3 justify-center h-[10%]'>
-                    <div className='w-[95%] flex rounded-full border border-black dark:border-gray-500 py-2'>
-                        <input
+                    <div className='w-[95%] flex rounded-full border border-black dark:border-gray-500'>
+                        <textarea
                             type='text'
-                            placeholder='Input your comment'
-                            className='bg-white bg-opacity-0 w-[90%] pl-5 placeholder:text-sm text-black dark:text-gray-200 focus:outline-none focus:border-none'
+                            name='comment'
+                            placeholder='Type your comment'
+                            className='chat-area'
+                            onKeyDown={handleKeydown}
+                            required
                             ref={commentRef}
                         />
-                        <button className='icon flex items-center px-4 cursor-pointer' disabled={loadingComment} onClick={() => handleComment()}>
+                        <button className='icon flex items-center px-4 cursor-pointer' disabled={loadingComment} onClick={handleSubmit}>
                             {loadingComment ? <FiLoader className='animate-spin' size={20} /> : <BsSendFill size={20} />}
                         </button>
                     </div>

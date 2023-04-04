@@ -7,12 +7,12 @@ import { TbRefresh } from 'react-icons/tb'
 import { FaUserFriends, FaUser } from 'react-icons/fa'
 import { Tooltip, PostEdit, Notification } from '@/components'
 import { SocialContext } from '@/context'
-import { GET_USER_INFO, CREATE_POST, NOTIFICATION_SUBSCRIPTION } from '@/graphql'
+import { GET_OWNER_INFO, CREATE_POST, NOTIFICATION_SUBSCRIPTION } from '@/graphql'
 import { useMutation, useQuery, useSubscription } from '@apollo/client'
 import { notificationService } from '@/services'
 
 function Header() {
-    const { loading, error, data } = useQuery(GET_USER_INFO)
+    const { loading, error, data } = useQuery(GET_OWNER_INFO)
     const [createPost] = useMutation(CREATE_POST)
     const { setModal, modal, handleInit, userInfo } = useContext(SocialContext)
     const [theme, setTheme] = useState('')

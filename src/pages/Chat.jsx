@@ -16,16 +16,24 @@ function Chat() {
     const [loadingMessage, setLoadingMessage] = useState(false)
     const [room, setRoom] = useState(null)
     const msgRef = useRef(null)
+    const handleKeydown = (e) => {
+        if (e.keyCode === 13 && e.shiftKey === false) {
+            e.preventDefault()
+            handleSubmit()
+        }
+    }
+    const handleSubmit = () => {
+        const content = msgRef.current.value
+        if (content.trim() !== '') {
+            setLoadingMessage(true)
+            createMessage(createMessageService(room.id, content, setLoadingMessage))
+            msgRef.current.value = ''
+        }
+    }
     const handleRoom = (el, i) => {
         setRoom(el)
         messageRoom[i].newMessage = false
         setMessageRoom([...messageRoom])
-    }
-    const handleSubmit = () => {
-        setLoadingMessage(true)
-        const content = msgRef.current.value
-        createMessage(createMessageService(room.id, content, setLoadingMessage))
-        msgRef.current.value = ''
     }
     return (
         <div className='bg-white dark:bg-black relative'>
@@ -53,7 +61,7 @@ function Chat() {
                                 <img src={el.user.ava} alt="ava" className='rounded-full w-10 h-10' key={el.user.ava} />
                                 <div className='flex flex-col'>
                                     <p className='font-semibold capitalize'>{el.user.name} {el.newMessage && <MdFiberNew className='text-red-500' />}</p>
-                                    <p className={`text-sm ${el.newMessage ? 'text-black font-semibold' : 'text-gray-400'}`}>{el?.lastMessage?.content || 'You are now connected! Send your first message!'}</p>
+                                    <p className={`text-sm ${el.newMessage ? 'text-black font-semibold' : 'text-gray-400'}`}>{el?.lastMessage?.content || 'Send message!'}</p>
                                 </div>
                             </div>
                             <p className='flex items-center text-[12px] text-gray-400'><BsClockHistory className='mr-1' /> {el?.updatedAt ? formatTime(el.updatedAt) : ''}</p>
@@ -78,14 +86,18 @@ function Chat() {
                             </div>
                         )}
                     <div className='h-[10%] py-3'>
-                        <div className='w-[95%] flex mx-auto my-auto rounded-full py-2 bg-gray-100'>
-                            <input
+                        <div className='w-[95%] max-h-[3rem] flex mx-auto my-auto rounded-full p-1 bg-gray-100'>
+                            <textarea
                                 ref={msgRef}
                                 type='text'
+                                name='message'
                                 placeholder='Type your message'
-                                className='bg-white bg-opacity-0 w-[95%] pl-5 placeholder:text-sm text-black dark:text-gray-200 focus:outline-none focus:border-none'
+                                className='chat-area'
+                                onKeyDown={handleKeydown}
+                                disabled={!room}
+                                required
                             />
-                            <button className='icon flex items-center px-4 cursor-pointer' onClick={() => handleSubmit()}>
+                            <button className='icon cursor-pointer flex items-center px-3 text-gray-500' onClick={handleSubmit}>
                                 {loadingMessage ? <FiLoader className='animate-spin' size={20} /> : <BsSendFill size={20} />}
                             </button>
                         </div>

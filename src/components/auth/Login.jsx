@@ -1,17 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { HiOutlineMail, HiFingerPrint } from 'react-icons/hi'
+import { HiOutlineMail, HiFingerPrint, HiStar } from 'react-icons/hi'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '@/graphql'
 import { toast } from 'react-toastify'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { SocialContext } from '@/context'
 import styles from '@/styles/Form.module.css'
 import { MyTextInput } from '@/components'
 
 function Login() {
-    const { setUserInfo } = useContext(SocialContext)
     const [show, setShow] = useState(false)
     const [login, { data, loading, error }] = useMutation(LOGIN)
 
@@ -22,14 +20,20 @@ function Login() {
     useEffect(() => {
         if (data) {
             const { login } = data
-            const { token, refreshToken, user } = login
+            const { token, refreshToken } = login
             localStorage.setItem('accessToken', token)
             localStorage.setItem('refreshToken', refreshToken)
-            setUserInfo(user)
             window.location.href = '/'
         }
     }, [data])
 
+    const handleLogin = (values) => {
+        login({
+            variables: {
+                loginInput: values
+            }
+        })
+    }
     return (
         <section className='w-3/4 mx-auto flex flex-col gap-10'>
             <div className="title">
@@ -48,11 +52,7 @@ function Login() {
                         .required('Required')
                 })}
                 onSubmit={async (values, { setSubmitting }) => {
-                    login({
-                        variables: {
-                            loginInput: values
-                        }
-                    })
+                    handleLogin(values)
                 }}
             >
                 <Form className='flex flex-col gap-3' >
@@ -79,9 +79,44 @@ function Login() {
                     </div>
                 </Form>
             </Formik>
-            <p className='text-center text-gray-400 '>
-                Don't have an account yet? <Link to={'/register'}><span className='text-blue-700'>Sign Up</span></Link>
-            </p>
+            <div className='text-center text-gray-400 '>
+                <p>
+                    Don't have an account yet? <Link to={'/register'}><span className='text-blue-700'>Sign Up</span></Link>
+                </p>
+                <p>or</p>
+                <p>Login by test account</p>
+                <div className='grid grid-cols-4 gap-2 pt-2'>
+                    <button
+                        className='btn-login relative'
+                        onClick={() => handleLogin({ email: 'peter@gmail.com', password: '123456' })}
+                    >Peter <HiStar className='absolute top-0 right-0 text-orange-300' /></button>
+                    <button
+                        className='btn-login relative'
+                        onClick={() => handleLogin({ email: 'anna@gmail.com', password: '123456' })}
+                    >Anna <HiStar className='absolute top-0 right-0 text-orange-300' /></button>
+                    <button
+                        className='btn-login'
+                        onClick={() => handleLogin({ email: 'will@gmail.com', password: '123456' })}
+                    >Will</button>
+                    <button
+                        className='btn-login'
+                        onClick={() => handleLogin({ email: 'angela@gmail.com', password: '123456' })}
+                    >Angela</button>
+                    <button
+                        className='btn-login'
+                        onClick={() => handleLogin({ email: 'christine@gmail.com', password: '123456' })}
+                    >Christine</button>
+                    <button
+                        className='btn-login'
+                        onClick={() => handleLogin({ email: 'john@gmail.com', password: '123456' })}
+                    >John</button>
+                    <button
+                        className='btn-login'>John</button>
+                    <button
+                        className='btn-login'>John</button>
+                </div>
+            </div>
+
         </section>
     )
 }

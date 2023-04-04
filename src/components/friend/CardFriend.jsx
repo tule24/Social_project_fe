@@ -5,6 +5,7 @@ import { UNFRIEND } from '@/graphql'
 import { FiLoader } from 'react-icons/fi'
 import { useMutation } from '@apollo/client'
 import { unFriendService } from '@/services'
+import { Link } from 'react-router-dom'
 
 function CardFriend({ user }) {
     const [loading, setLoading] = useState(false)
@@ -22,7 +23,7 @@ function CardFriend({ user }) {
                     <button className='friend-btn rounded-bl-md' disabled={loading} onClick={() => handleUnfriend()}>{loading ? <FiLoader className='ml-2 animate-spin' /> : <FaUserMinus className='mx-auto text-2xl text-red-500' />}</button>
                 </Tooltip>
                 <Tooltip message={'View info'} position={"left-7"}>
-                    <button className='friend-btn rounded-br-md '><FaRegEye className='mx-auto text-2xl' /></button>
+                    <Link to={`/user/${user.id}`} className='friend-btn rounded-br-md '><FaRegEye className='mx-auto text-2xl' /></Link>
                 </Tooltip>
             </div>
         </div>

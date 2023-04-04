@@ -9,7 +9,7 @@ export const MyTextInput = ({ label, IconComp, ...props }) => {
     const [field, meta] = useField(props)
 
     return (
-        <>
+        <div>
             {label && <label htmlFor={label} className='font-semibold mt-5'>{label}</label>}
             <div className={styles.input_group}>
                 <input {...field} {...props} className={styles.input_text} />
@@ -18,7 +18,7 @@ export const MyTextInput = ({ label, IconComp, ...props }) => {
             {meta.touched && meta.error ? (
                 <div className="error text-red-500 text-sm">{meta.error}</div>
             ) : null}
-        </>
+        </div>
     )
 }
 

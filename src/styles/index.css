@@ -96,6 +96,11 @@ body {
   }
 }
 
+.chat-area {
+  @apply p-2 bg-white bg-opacity-0 w-[95%] pl-5 placeholder:text-sm text-black focus:outline-none focus:border-none;
+  resize: none;
+}
+
 .cmt-area {
   @apply w-[24vw] p-1 rounded-lg;
   resize: none;
@@ -140,4 +145,8 @@ body {
 }
 .rep-confirm {
   @apply absolute flex items-start w-max bg-black text-white text-[10px] space-y-1 rounded-lg p-1 -top-[3.5rem] transition-all duration-200 left-0;
+}
+
+.btn-login {
+  @apply bg-indigo-400 rounded-md py-1 text-gray-50 hover:bg-indigo-700;
 }

@@ -16,11 +16,19 @@ function Replies({ commentId, totalReplies }) {
 
     const [loadingRep, setLoadingRep] = useState(false)
     const textRep = useRef(null)
-    const handleCreateRep = () => {
-        setLoadingRep(true)
+    const handleKeydown = (e) => {
+        if (e.keyCode === 13 && e.shiftKey === false) {
+            e.preventDefault()
+            handleSubmit()
+        }
+    }
+    const handleSubmit = () => {
         const content = textRep.current.value
-        createReplies(createRepliesService(commentId, content, setLoadingRep))
-        textRep.current.value = ''
+        if (content.trim() !== '') {
+            setLoadingRep(true)
+            createReplies(createRepliesService(commentId, content, setLoadingRep))
+            textRep.current.value = ''
+        }
     }
 
     return (
@@ -45,14 +53,17 @@ function Replies({ commentId, totalReplies }) {
                 : ''
             }
             <div className='flex border-gray-400 justify-center' >
-                <div className='w-[95%] flex rounded-full border border-black dark:border-gray-500 py-1'>
-                    <input
+                <div className='w-[95%] h-[2.5rem] flex rounded-full border border-black dark:border-gray-500'>
+                    <textarea
                         type='text'
-                        placeholder='Input your replies'
-                        className='bg-white bg-opacity-0 w-[90%] pl-5 placeholder:text-sm text-black dark:text-gray-200 focus:outline-none focus:border-none'
+                        name='replies'
+                        placeholder='Type your replies'
+                        className='chat-area'
+                        onKeyDown={handleKeydown}
+                        required
                         ref={textRep}
                     />
-                    <button className='icon flex items-center px-4 cursor-pointer' disabled={loadingRep} onClick={() => handleCreateRep()}>
+                    <button className='icon flex items-center px-4 cursor-pointer' disabled={loadingRep} onClick={handleSubmit}>
                         {loadingRep ? <FiLoader className='animate-spin' /> : <BsSendFill size={20} />}
                     </button>
                 </div>

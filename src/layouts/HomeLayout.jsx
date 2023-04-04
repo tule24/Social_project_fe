@@ -21,7 +21,7 @@ function HomeLayout() {
       const creator = data.messageCreated.creator
       const index = messageRoom.findIndex(room => room.id === roomId)
       if (index >= 0) {
-        messageRoom[index].newMessage = true
+        messageRoom[index].newMessage = creator.id !== userInfo.id
         messageRoom[index].updatedAt = newMsg.createdAt
         messageRoom[index].lastMessage = { ...messageRoom[index].lastMessage, creatorId: creator.id, content: newMsg.message }
         setMessageRoom([...messageRoom])

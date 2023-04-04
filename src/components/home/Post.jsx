@@ -10,6 +10,7 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_POST, DELETE_POST, LIKE_POST, UNLIKE_POST, USER_LIKE_POST } from '@/graphql'
 import { likePostService, unlikePostService } from '@/services'
 import { formatTime } from '@/helper'
+import { Link } from 'react-router-dom'
 
 function Post({ post, user }) {
     const { id, content, media, vision, totalComment, updatedAt } = post
@@ -39,7 +40,7 @@ function Post({ post, user }) {
                 <div className="flex space-x-4 items-center">
                     <img alt="" src={creator?.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
                     <div className="flex flex-col space-y-1">
-                        <span className="text-sm font-semibold capitalize">{creator?.name}</span>
+                        <Link to={`/user/${creator?.id}`} className="text-sm font-semibold capitalize">{creator?.name}</Link>
                         <span className="text-xs dark:text-gray-400">{formatTime(updatedAt)}</span>
                     </div>
                 </div>

@@ -14,11 +14,19 @@ function MiniChat({ room, closeChat, userId }) {
   const [msgData, setMsgData] = useState([])
   const msgRef = useRef(null)
   const bottomRef = useRef(null)
+  const handleKeydown = (e) => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      e.preventDefault()
+      handleSubmit()
+    }
+  }
   const handleSubmit = () => {
-    setLoadingMessage(true)
     const content = msgRef.current.value
-    createMessage(createMessageService(room.id, content, setLoadingMessage))
-    msgRef.current.value = ''
+    if (content.trim() !== '') {
+      setLoadingMessage(true)
+      createMessage(createMessageService(room.id, content, setLoadingMessage))
+      msgRef.current.value = ''
+    }
   }
   useEffect(() => {
     if (data) {
@@ -74,17 +82,19 @@ function MiniChat({ room, closeChat, userId }) {
         </QueryResult>
         <span ref={bottomRef} />
       </div>
-      <div className='min-h-[3rem] border-t flex'>
-        <input
+      <div className='max-h-[2.8rem] border-t flex'>
+        <textarea
           ref={msgRef}
           type='text'
           name='message'
           placeholder='Type your message'
-          className='bg-white bg-opacity-0 w-[90%] pl-5 placeholder:text-sm text-black focus:outline-none focus:border-none'
+          className='chat-area'
+          onKeyDown={handleKeydown}
+          required
         />
-        <span className='icon cursor-pointer flex items-center px-4 text-gray-500' onClick={() => handleSubmit()}>
+        <button className='icon cursor-pointer flex items-center px-3 text-gray-500' onClick={handleSubmit}>
           {loadingMessage ? <FiLoader className='animate-spin' size={20} /> : <BsSendFill size={20} />}
-        </span>
+        </button>
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import { GET_NEW_FRIEND, ADD_FRIEND } from '@/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { addFriendService } from '@/services'
 import { FiLoader } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
 
 function CardFriendNew() {
     const [isloading, setIsLoading] = useState('')
@@ -25,7 +26,7 @@ function CardFriendNew() {
                             <button className='friend-btn rounded-bl-md' disabled={isloading === el.id} onClick={() => handleAddFriend(el.id)}>{isloading === el.id ? <FiLoader className='ml-2 animate-spin' /> : <FaUserPlus className='mx-auto text-2xl text-green-500' />}</button>
                         </Tooltip>
                         <Tooltip message={'View info'} position={"left-7"}>
-                            <button className='friend-btn rounded-br-md '><FaRegEye className='mx-auto text-2xl' /></button>
+                            <Link to={`/user/${el.id}`} className='friend-btn rounded-br-md '><FaRegEye className='mx-auto text-2xl' /></Link>
                         </Tooltip>
                     </div>
                 </div>)

@@ -1,7 +1,7 @@
 import { AuthLayout, HomeLayout } from '@/layouts'
 import { createBrowserRouter } from 'react-router-dom'
 import { Login, Register } from '@/components'
-import { Home, Friend, Profile, Chat } from '@/pages'
+import { Home, Friend, Profile, Chat, User } from '@/pages'
 import ProtectedRoute from './protectedRoute'
 
 export default createBrowserRouter([
@@ -35,9 +35,12 @@ export default createBrowserRouter([
                     },
                     {
                         path: 'profile',
-                        element: <Profile />
+                        element: <Profile/>
                     },
-
+                    {
+                        path: 'user/:userId',
+                        element: <User />
+                    }
                 ]
             },
             {

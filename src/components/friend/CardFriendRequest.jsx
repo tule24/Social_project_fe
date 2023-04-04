@@ -5,6 +5,7 @@ import { FiLoader } from 'react-icons/fi'
 import { CONFIRM_FRIEND } from '@/graphql'
 import { useMutation } from '@apollo/client'
 import { confirmFriendService } from '@/services'
+import { Link } from 'react-router-dom'
 
 function CardFriendRequest({ user }) {
     const [loading, setLoading] = useState('')
@@ -29,7 +30,7 @@ function CardFriendRequest({ user }) {
                     <button className='friend-btn' disabled={loading === 'reject'} onClick={() => handleUnfriend()}>{loading === 'reject' ? <FiLoader className='ml-2 animate-spin' /> : <FaUserTimes className='mx-auto text-2xl text-red-500' />}</button>
                 </Tooltip>
                 <Tooltip message={'View info'} position={"left-2"}>
-                    <button className='friend-btn rounded-br-md '><FaRegEye className='mx-auto text-2xl' /></button>
+                    <Link to={`/user/${user.id}`} className='friend-btn rounded-br-md '><FaRegEye className='mx-auto text-2xl' /></Link>
                 </Tooltip>
             </div>
         </div>
