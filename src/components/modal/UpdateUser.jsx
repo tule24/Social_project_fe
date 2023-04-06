@@ -25,11 +25,11 @@ function UpdateUser({ user, modal, setModal }) {
                 <div className='mx-auto mt-[3rem]'>
                     <Formik
                         initialValues={{
-                            name: user.name,
-                            dob: user.dob,
-                            email: user.email,
-                            phone: user.phone,
-                            address: user.address
+                            name: user.name || '',
+                            dob: user.dob || '',
+                            email: user.email || '',
+                            phone: user.phone || '',
+                            address: user.address || ''
                         }}
                         validationSchema={Yup.object({
                             name: Yup.string()

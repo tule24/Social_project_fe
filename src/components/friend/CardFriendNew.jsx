@@ -9,11 +9,30 @@ import { Link } from 'react-router-dom'
 
 function CardFriendNew() {
     const [isloading, setIsLoading] = useState('')
-    const { subscribeToMore, data, loading, error } = useQuery(GET_NEW_FRIEND)
+    const { data, loading, error, fetchMore } = useQuery(GET_NEW_FRIEND, { variables: { page: 1 } })
     const [addFriend] = useMutation(ADD_FRIEND)
     const handleAddFriend = (friendId) => {
         setIsLoading(friendId)
         addFriend(addFriendService(friendId))
+    }
+    const [isMore, setIsMore] = useState(true)
+    const handleFetch = () => {
+        if (data && data.users) {
+            const page = Math.floor(data.users.length / 5) + 1
+            fetchMore({
+                variables: { page },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) return prev
+                    if (fetchMoreResult.users.length < 5) {
+                        setIsMore(false)
+                    }
+                    const newUser = fetchMoreResult.users.filter(el => !prev.users.find(user => user.id === el.id))
+                    return Object.assign({}, prev, {
+                        users: [...prev.users, ...newUser]
+                    })
+                }
+            })
+        }
     }
     return (
         <QueryResult loading={loading} data={data} error={error} skeleton={<FriendSkeleton />}>
@@ -31,6 +50,11 @@ function CardFriendNew() {
                     </div>
                 </div>)
             })}
+            {isMore ? <button className='flex justify-center items-center cursor-pointer' onClick={handleFetch}>
+                <p className='font-semibold text-xl'>VIEW MORE</p>
+            </button> : <button className='flex justify-center items-center' disabled>
+                <p className='font-semibold text-xl'>No more</p>
+            </button>}
         </QueryResult>
     )
 }

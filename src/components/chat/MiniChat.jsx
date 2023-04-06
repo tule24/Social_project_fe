@@ -8,7 +8,7 @@ import { createMessageService, messageSubService } from '@/services'
 import { FiLoader } from 'react-icons/fi'
 
 function MiniChat({ room, closeChat, userId }) {
-  const { subscribeToMore, loading, error, data } = useQuery(GET_MESSAGE_ROOM, { variables: { roomId: room.id } })
+  const { subscribeToMore, loading, error, data, fetchMore } = useQuery(GET_MESSAGE_ROOM, { variables: { roomId: room.id, page: 1 } })
   const [createMessage] = useMutation(CREATE_MESSAGE)
   const [loadingMessage, setLoadingMessage] = useState(false)
   const [msgData, setMsgData] = useState([])
@@ -36,17 +36,18 @@ function MiniChat({ room, closeChat, userId }) {
     }
   }, [data])
   useEffect(() => messageSubService(subscribeToMore), [])
-  useEffect(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), [msgData])
+  useEffect(() => bottomRef.current?.scrollIntoView(), [msgData])
+
   return (
-    <div className='h-[50vh] w-[20rem] bg-white dark:bg-zinc-700 dark:text-white rounded-lg my-shadow flex flex-col overflow-hidden'>
-      <div className='w-full bg-blue-500 dark:bg-zinc-900 flex justify-between items-center px-2 py-1 h-[3rem]'>
+    <div className='h-[50vh] lg:w-[20rem] w-[15rem] bg-white dark:bg-zinc-700 dark:text-white rounded-lg my-shadow flex flex-col overflow-hidden'>
+      <div className='w-full bg-blue-400 flex justify-between items-center px-2 py-1 h-[3rem]'>
         <div className="flex space-x-1 items-center">
           <img alt="ava" src={room.user.ava} className="object-cover w-9 h-9 rounded-full shadow dark:bg-gray-500" />
           <p className="font-semibold capitalize">{room.user.name}</p>
         </div>
         <GrClose size={20} className='cursor-pointer' onClick={() => closeChat(room.id)} />
       </div>
-      <div className='flex-grow overflow-auto p-2 space-y-5 scrol relative' >
+      <div className='flex-grow overflow-auto p-2 space-y-5 relative'>
         <QueryResult loading={loading} error={error} data={data} skeleton={<LoadingSpiner />}>
           {msgData?.map(el => {
             return el.creator.id !== userId ? (
@@ -55,7 +56,7 @@ function MiniChat({ room, closeChat, userId }) {
                 <div className='max-w-[50%] space-y-1 flex flex-col items-start'>
                   {el.content.map(msg => {
                     return (
-                      <p title={msg.createdAt} className='bg-slate-200 dark:bg-slate-900 py-1 px-2 rounded-md break-words' key={msg.createdAt}>
+                      <p title={msg.createdAt} className='bg-slate-200 py-1 px-2 rounded-md break-all' key={msg.createdAt}>
                         {msg.message}
                       </p>
                     )
@@ -67,7 +68,7 @@ function MiniChat({ room, closeChat, userId }) {
                 <div className='max-w-[50%] space-y-1 flex flex-col items-end'>
                   {el.content.map(msg => {
                     return (
-                      <p title={msg.createdAt} className='bg-blue-500 dark:bg-slate-900 py-1 px-2 rounded-md break-words' key={msg.createdAt}>
+                      <p title={msg.createdAt} className='bg-blue-500  py-1 px-2 rounded-md break-all' key={msg.createdAt}>
                         {msg.message}
                       </p>
                     )
@@ -91,6 +92,7 @@ function MiniChat({ room, closeChat, userId }) {
           className='chat-area'
           onKeyDown={handleKeydown}
           required
+          autoFocus
         />
         <button className='icon cursor-pointer flex items-center px-3 text-gray-500' onClick={handleSubmit}>
           {loadingMessage ? <FiLoader className='animate-spin' size={20} /> : <BsSendFill size={20} />}

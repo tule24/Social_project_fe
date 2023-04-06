@@ -10,7 +10,7 @@
 }
 
 .button{
-    @apply w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md py-3 text-gray-50 text-lg;
+    @apply w-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md py-3 text-gray-50 text-lg text-center;
 }
 
 .button:hover{

@@ -6,13 +6,15 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import promiseToObservable from './helper/promiseToObservable'
 import { createClient } from 'graphql-ws'
 import { REFRESHTOKEN } from '@/graphql'
+import Cookies from 'universal-cookie'
 
+const cookies = new Cookies()
 let httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
 const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:4000/graphql',
   connectionParams: {
     headers: {
-      authorization: `Bearer ${localStorage.getItem('refreshToken')}`
+      authorization: `Bearer ${cookies.get('refreshToken')}`
     }
   }
 }))
@@ -28,14 +30,17 @@ const authLink = setContext((_, { headers }) => {
 })
 const refreshToken = async () => {
   try {
-    const rfToken = localStorage.getItem('refreshToken')
+    const rfToken = cookies.get('refreshToken')
     const { data } = await client.mutate({ mutation: REFRESHTOKEN, variables: { refreshToken: rfToken } })
     const { token, refreshToken } = data?.refreshToken
     localStorage.setItem('accessToken', token)
-    localStorage.setItem('refreshToken', refreshToken)
+    cookies.set("refreshToken", refreshToken, {
+      expires: new Date(Date.now() + 60 * 60 * 24 * 1000)
+    })
     return `Bearer ${token}`
   } catch (error) {
     localStorage.clear()
+    cookies.remove('refreshToken')
     window.location.href = '/login'
     throw error
   }

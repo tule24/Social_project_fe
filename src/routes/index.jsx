@@ -35,17 +35,17 @@ export default createBrowserRouter([
                     },
                     {
                         path: 'profile',
-                        element: <Profile/>
+                        element: <Profile />
+                    },
+                    {
+                        path: '/chat',
+                        element: <Chat />
                     },
                     {
                         path: 'user/:userId',
                         element: <User />
                     }
                 ]
-            },
-            {
-                path: '/chat',
-                element: <Chat />
             }
         ]
     }

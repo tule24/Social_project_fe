@@ -31,15 +31,12 @@ function HomeLayout() {
   useEffect(() => {
     error && console.log(error)
   }, [error])
-
   return (
     <div className='bg-white dark:bg-black relative'>
       <Header />
-      <div className='dark:bg-zinc-900 bg-gray-200 min-h-screen w-screen pt-24 px-10'>
-        <Outlet />
-      </div>
+      <Outlet />
       <HOCModal />
-      <div className='fixed bottom-5 w-max right-[20%] flex justify-end space-x-2'>
+      <div className='fixed bottom-5 w-max lg:right-[20%] right-[10%] flex justify-end space-x-2'>
         {miniChat.map(el => <MiniChat room={el} closeChat={closeChat} userId={userInfo.id} key={el.id} />)}
       </div>
       <ToastContainer closeButton={true} position='top-right' style={{ width: "max-content" }} />

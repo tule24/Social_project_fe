@@ -10,8 +10,8 @@ function HOCModal() {
         }
     }, [open])
     return open && (
-        <div className='fixed top-0 left-0 right-0 h-screen flex justify-center items-center bg-black bg-opacity-50 z-50' onClick={() => setModal({ ...modal, open: false })}>
-            <div className='w-[80%] h-[90%]' onClick={(e) => e.stopPropagation()}>
+        <div className='fixed top-0 left-0 right-0 h-screen flex justify-center items-center bg-black bg-opacity-50 z-50'>
+            <div className='xl:w-[80%] h-[90%] w-[95%]'>
                 {component}
             </div>
         </div >

@@ -2,7 +2,7 @@ import { cache } from '@/ApolloProvider'
 import { COMMENT_FRAGMENT, COMMENT_OF_POST, POST_FRAGMENT } from '@/graphql'
 import { toast } from 'react-toastify'
 
-export const createCommentService = (postId, content, setLoadingComment) => {
+export const createCommentService = (postId, content, setLoadingComment, setTotalComment) => {
     return {
         variables: {
             postId,
@@ -27,6 +27,7 @@ export const createCommentService = (postId, content, setLoadingComment) => {
             if (postUpdate) {
                 const totalComment = postUpdate.totalComment + 1
                 cache.writeFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT, data: { ...postUpdate, totalComment } })
+                setTotalComment(totalComment)
             }
         },
         onCompleted: () => { setLoadingComment(false) },

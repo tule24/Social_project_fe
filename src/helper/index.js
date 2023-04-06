@@ -8,7 +8,7 @@ export const toBase64 = file => new Promise((resolve, reject) => {
 export const formatTime = (input) => {
     const secs = Math.abs(Date.now() - Date.parse(input))/1000
     if(secs < 60) {
-        return `${secs} secs ago`
+        return `Just now`
     } else if(secs/60 < 60) {
         const min = Math.floor(secs/60)
         return `${min} mins ago`

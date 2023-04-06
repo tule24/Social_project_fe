@@ -5,7 +5,7 @@ import { LoadingSpiner, QueryResult } from '../common'
 import { messageSubService } from '@/services'
 
 function BigChat({ roomId, userId }) {
-  const { subscribeToMore, loading, error, data } = useQuery(GET_MESSAGE_ROOM, { variables: { roomId } })
+  const { subscribeToMore, loading, error, data } = useQuery(GET_MESSAGE_ROOM, { variables: { roomId, page: 1 } })
   const [msgData, setMsgData] = useState([])
   useEffect(() => {
     if (data) {

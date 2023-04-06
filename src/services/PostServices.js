@@ -9,12 +9,14 @@ export const createPostService = (postInput, modal, setModal) => {
         update: (cache, { data }) => {
             const postOfOwnerCache = cache.readQuery({ query: POST_OF_OWNER, variables: { page: 1 } })
             if (postOfOwnerCache) {
-                cache.writeQuery({ query: POST_OF_OWNER, variables: { page: 1 }, data: { postOfUser: [{ ...data.createPost, liked: false }, ...postOfOwnerCache.postOfUser] } })
+                cache.writeQuery({ query: POST_OF_OWNER, variables: { page: 1 }, data: { postOfOwner: [{ ...data.createPost, liked: false }, ...postOfOwnerCache.postOfOwner] } })
             }
 
-            const postForOwnerCache = cache.readQuery({ query: POST_FOR_USER, variables: { page: 1 } })
-            if (postForOwnerCache) {
-                cache.writeQuery({ query: POST_FOR_USER, variables: { page: 1 }, data: { postForUser: [{ ...data.createPost, liked: false }, ...postForOwnerCache.postForUser] } })
+            if (data.createPost.vision !== 'private') {
+                const postForOwnerCache = cache.readQuery({ query: POST_FOR_USER, variables: { page: 1 } })
+                if (postForOwnerCache) {
+                    cache.writeQuery({ query: POST_FOR_USER, variables: { page: 1 }, data: { postForUser: [{ ...data.createPost, liked: false }, ...postForOwnerCache.postForUser] } })
+                }
             }
         },
         onCompleted: () => {
@@ -44,17 +46,9 @@ export const updatePostService = (postId, postInput, modal, setModal) => {
 
             const postOfOwnerCache = cache.readQuery({ query: POST_OF_OWNER, variables: { page: 1 } })
             if (postOfOwnerCache) {
-                const sortPostOfOwner = [...postOfOwnerCache.postOfUser]
+                const sortPostOfOwner = [...postOfOwnerCache.postOfOwner]
                 sortPostOfOwner.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-                cache.writeQuery({ query: POST_OF_OWNER, variables: { page: 1 }, data: { postOfUser: [...sortPostOfOwner] } })
-
-            }
-
-            const postForOwnerCache = cache.readQuery({ query: POST_FOR_USER, variables: { page: 1 } })
-            if (postForOwnerCache) {
-                const sortPostForOwner = [...postForOwnerCache.postForUser]
-                sortPostForOwner.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-                cache.writeQuery({ query: POST_FOR_USER, variables: { page: 1 }, data: { postForUser: [...sortPostForOwner] } })
+                cache.writeQuery({ query: POST_OF_OWNER, variables: { page: 1 }, data: { postOfOwner: [...sortPostOfOwner] } })
             }
         },
         onCompleted: () => {
@@ -77,7 +71,7 @@ export const deletePostService = (postId, modal, setModal) => {
         update: (cache, { data }) => {
             const postOfOwnerCache = cache.readQuery({ query: POST_OF_OWNER, variables: { page: 1 } })
             if (postOfOwnerCache) {
-                cache.writeQuery({ query: POST_OF_OWNER, variables: { page: 1 }, data: { postOfUser: postOfOwnerCache.postOfUser.filter(el => el.id !== data.deletePost.id) } })
+                cache.writeQuery({ query: POST_OF_OWNER, variables: { page: 1 }, data: { postOfOwner: postOfOwnerCache.postOfOwner.filter(el => el.id !== data.deletePost.id) } })
             }
 
             const postForOwnerCache = cache.readQuery({ query: POST_FOR_USER, variables: { page: 1 } })
@@ -149,6 +143,6 @@ export const unlikePostService = (postId, setLiked, totalLike, setTotalLike, use
 export const updateLikePost = (postId, totalLike) => {
     const postUpdate = cache.readFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT })
     if (postUpdate) {
-        cache.writeFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT, data: { ...postUpdate, totalLike} })
+        cache.writeFragment({ id: `Post:${postId}`, fragment: POST_FRAGMENT, data: { ...postUpdate, totalLike } })
     }
 }

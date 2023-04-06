@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify'
 function AuthLayout() {
     return (
         <div className='w-screen h-screen bg-blue-400 flex items-center justify-center'>
-            <div className="bg-slate-50 rounded-md w-3/5 min-h-[75%] grid lg:grid-cols-2">
+            <div className="bg-slate-50 rounded-md xl:w-3/5 lg:w-4/5 sm:w-2/3 w-[95%] min-h-[75%] grid lg:grid-cols-2">
                 <div className={styles.imgStyle}>
                     <div className={styles.cartoonImg}></div>
                     <div className={styles.cloud_one}></div>

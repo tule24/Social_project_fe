@@ -14,6 +14,7 @@ export const CREATE_POST = gql`
             totalLike
             vision
             totalComment
+            createdAt
             updatedAt
         }
     }
@@ -26,6 +27,7 @@ export const UPDATE_POST = gql`
             content
             media
             vision
+            createdAt
             updatedAt
         }
     }

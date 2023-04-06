@@ -1,38 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HiOutlineMail, HiFingerPrint, HiStar } from 'react-icons/hi'
 import { useMutation } from '@apollo/client'
 import { LOGIN } from '@/graphql'
-import { toast } from 'react-toastify'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import styles from '@/styles/Form.module.css'
 import { MyTextInput } from '@/components'
+import { loginService } from '@/services'
+import { FiLoader } from 'react-icons/fi'
 
 function Login() {
     const [show, setShow] = useState(false)
     const [login, { data, loading, error }] = useMutation(LOGIN)
 
-    useEffect(() => {
-        error && toast.error(error.message)
-    }, [error])
-
-    useEffect(() => {
-        if (data) {
-            const { login } = data
-            const { token, refreshToken } = login
-            localStorage.setItem('accessToken', token)
-            localStorage.setItem('refreshToken', refreshToken)
-            window.location.href = '/'
-        }
-    }, [data])
-
     const handleLogin = (values) => {
-        login({
-            variables: {
-                loginInput: values
-            }
-        })
+        login(loginService(values))
     }
     return (
         <section className='w-3/4 mx-auto flex flex-col gap-10'>
@@ -74,18 +57,18 @@ function Login() {
                     />
                     <div className="input-button">
                         <button type='submit' className={styles.button}>
-                            Login
+                            {loading ? <FiLoader className='animate-spin mx-auto' size={20} /> : 'Login'}
                         </button>
                     </div>
                 </Form>
             </Formik>
-            <div className='text-center text-gray-400 '>
+            <div className='text-center text-gray-400 text-sm lg:text-base'>
                 <p>
                     Don't have an account yet? <Link to={'/register'}><span className='text-blue-700'>Sign Up</span></Link>
                 </p>
                 <p>or</p>
                 <p>Login by test account</p>
-                <div className='grid grid-cols-4 gap-2 pt-2'>
+                <div className='grid lg:grid-cols-4 grid-cols-2 gap-2 pt-2'>
                     <button
                         className='btn-login relative'
                         onClick={() => handleLogin({ email: 'peter@gmail.com', password: '123456' })}

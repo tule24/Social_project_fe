@@ -13,7 +13,7 @@ import { FaUserLock, FaUsers } from 'react-icons/fa'
 
 function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost, unlikePost, setLiked, setTotalLike }) {
     const { id, content, media, vision, updatedAt } = post
-    const { loading, error, data } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 } })
+    const { loading, error, data, fetchMore } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 } })
     const [createComment] = useMutation(CREATE_COMMENT)
     const [updateComment] = useMutation(UPDATE_COMMENT)
     const [deleteComment] = useMutation(DELETE_COMMENT)
@@ -32,7 +32,7 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
         const content = commentRef.current.value
         if (content.trim() !== '') {
             setLoadingComment(true)
-            createComment(createCommentService(id, content, setLoadingComment))
+            createComment(createCommentService(id, content, setLoadingComment, setTotalComment))
             commentRef.current.value = ''
         }
     }
@@ -57,9 +57,35 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
         }
     }, [likedChild])
 
+    const [totalComment, setTotalComment] = useState(post.totalComment)
+    const [isMore, setIsMore] = useState(true)
+    const handleFetch = () => {
+        if (data && data.commentOfPost) {
+            const page = Math.floor((data.commentOfPost.length / 10) + 1)
+            fetchMore({
+                variables: { postId: id, page },
+                updateQuery: (prev, { fetchMoreResult }) => {
+                    if (!fetchMoreResult) return prev
+                    if (fetchMoreResult.commentOfPost.length < 10) {
+                        setIsMore(false)
+                    }
+                    const newCmt = fetchMoreResult.commentOfPost.filter(el => !prev.commentOfPost.find(cmt => cmt.id === el.id))
+                    return Object.assign({}, prev, {
+                        commentOfPost: [...prev.commentOfPost, ...newCmt]
+                    })
+                }
+            })
+        }
+    }
+    useEffect(() => {
+        if (data && data.commentOfPost) {
+            isMore && data.commentOfPost.length >= totalComment && setIsMore(false)
+        }
+    }, [data])
+
     return (
-        <div className='w-full h-full bg-gray-200 grid grid-cols-[1.5fr_1fr] rounded-lg overflow-hidden'>
-            <div className='bg-gray-200 dark:bg-zinc-800 overflow-auto border-r-2 border-gray-300 dark:border-gray-500'>
+        <div className='w-full h-full bg-gray-200 grid lg:grid-cols-[1.5fr_1fr] sm:grid-cols-2 grid-cols-1 rounded-lg overflow-hidden'>
+            <div className='bg-gray-200 dark:bg-zinc-800 overflow-auto custom-bar border-r-2 border-gray-300 dark:border-gray-500'>
                 <div className="flex flex-col w-full p-6 space-y-5 overflow-hidden rounded-lg dark:bg-zinc-800 dark:text-gray-100">
                     <div className='flex justify-between items-start'>
                         <div className="flex space-x-4">
@@ -84,7 +110,7 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
                             </button>
                             <button className="flex items-center space-x-1">
                                 <AiOutlineComment />
-                                <span>{data?.commentOfPost?.length}</span>
+                                <span>{totalComment}</span>
                             </button>
                         </div>
                         <div className="flex space-x-2 dark:text-gray-400">
@@ -96,7 +122,7 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
                 </div>
             </div>
             <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white'>
-                <div className='flex flex-col space-y-2 w-full p-5 overflow-auto'>
+                <div className='flex flex-col space-y-2 w-full p-5 overflow-auto custom-bar'>
                     <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />}>
                         {data?.commentOfPost?.map(el => <CmtRep
                             key={el.id}
@@ -113,14 +139,15 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
                             unlikeSer={unlikeCommentService}
                         />)}
                     </QueryResult>
+                    {isMore && <p className='font-semibold text-sm cursor-pointer hover:underline' onClick={handleFetch}>View more comment</p>}
                 </div>
-                <div className='flex border-t border-gray-400 p-3 justify-center h-[10%]'>
+                <div className='flex border-t border-gray-400 p-3 justify-center h-[4rem]'>
                     <div className='w-[95%] flex rounded-full border border-black dark:border-gray-500'>
                         <textarea
                             type='text'
                             name='comment'
                             placeholder='Type your comment'
-                            className='chat-area'
+                            className='chat-area scrollbar-hide'
                             onKeyDown={handleKeydown}
                             required
                             ref={commentRef}

@@ -9,20 +9,21 @@ import { SocialContext } from '@/context'
 import { useMutation } from '@apollo/client'
 import { UPDATE_POST, DELETE_POST, LIKE_POST, UNLIKE_POST, USER_LIKE_POST } from '@/graphql'
 import { likePostService, unlikePostService } from '@/services'
-import { formatTime } from '@/helper'
+import { formatTime, minifyText } from '@/helper'
 import { Link } from 'react-router-dom'
 
-function Post({ post, user }) {
+function Post({ post, user, isProfile }) {
     const { id, content, media, vision, totalComment, updatedAt } = post
     const creator = post.creator ? post.creator : user
     const [showLike, setShowLike] = useState(false)
     const [liked, setLiked] = useState(post.liked)
     const [totalLike, setTotalLike] = useState(post.totalLike)
-    const { modal, setModal } = useContext(SocialContext)
+    const { modal, setModal, userInfo } = useContext(SocialContext)
     const [updatePost] = useMutation(UPDATE_POST)
     const [deletePost] = useMutation(DELETE_POST)
     const [likePost] = useMutation(LIKE_POST)
     const [unlikePost] = useMutation(UNLIKE_POST)
+    const [full, setFull] = useState(content.length < 480)
 
     const handleLikePost = () => {
         setLiked(!liked)
@@ -40,12 +41,12 @@ function Post({ post, user }) {
                 <div className="flex space-x-4 items-center">
                     <img alt="" src={creator?.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
                     <div className="flex flex-col space-y-1">
-                        <Link to={`/user/${creator?.id}`} className="text-sm font-semibold capitalize">{creator?.name}</Link>
+                        <Link to={creator?.id !== user?.id ? `/user/${creator?.id}` : '/profile'} className="text-sm font-semibold capitalize">{creator?.name}</Link>
                         <span className="text-xs dark:text-gray-400">{formatTime(updatedAt)}</span>
                     </div>
                 </div>
-                {!post.creator && <button
-                    className='bg-black bg-opacity-10 rounded-full w-12 h-12 flex items-center justify-center'
+                {isProfile && <button
+                    className='bg-black bg-opacity-10 rounded-full sm:w-12 sm:h-12 w-8 h-8 flex items-center justify-center'
                     onClick={() => setModal({
                         ...modal,
                         open: true,
@@ -63,7 +64,10 @@ function Post({ post, user }) {
                 </button>}
             </div>
             <div>
-                {parse(content)}
+                {full ? parse(content) : parse(minifyText(content, 480))}
+                {full ?
+                    (content.length < 480 ? '' : <span className='font-semibold cursor-pointer hover:underline' onClick={() => setFull(false)}>See less</span>)
+                    : <span className='font-semibold cursor-pointer hover:underline' onClick={() => setFull(true)}>See more</span>}
                 {media.length ? <div className='h-[30rem] mt-5'>
                     <Slider images={media} />
                 </div> : ""}

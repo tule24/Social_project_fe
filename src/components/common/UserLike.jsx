@@ -30,7 +30,7 @@ function UserLike({ query, args, setShowLike, opt }) {
         }
     }, [data])
     return (
-        <div className='absolute bg-gray-400 w-max h-max top-0 -translate-y-full rounded-lg p-1 my-shadow'>
+        <div className='absolute bg-gray-400 w-max h-[5rem] overflow-auto scrollbar-hide top-0 -translate-y-full rounded-lg p-1 my-shadow'>
             <div className='flex items-center justify-between border-b border-gray-600 mb-1'>
                 <p className='text-sm font-semibold'>User like</p>
                 <button onClick={() => setShowLike(false)}><AiOutlineCloseCircle /></button>

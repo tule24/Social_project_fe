@@ -7,7 +7,7 @@ import { createRepliesService, updateRepliesService, deleteRepliesService, likeR
 import { FiLoader } from 'react-icons/fi'
 
 function Replies({ commentId, totalReplies }) {
-    const { loading, error, data } = useQuery(REPLIES_OF_COMMENT, { variables: { commentId, page: 1 } })
+    const { loading, error, data } = useQuery(REPLIES_OF_COMMENT, { variables: { commentId } })
     const [createReplies] = useMutation(CREATE_REPLIES)
     const [updateReplies] = useMutation(UPDATE_REPLIES)
     const [deleteReplies] = useMutation(DELETE_REPLIES)
@@ -53,17 +53,17 @@ function Replies({ commentId, totalReplies }) {
                 : ''
             }
             <div className='flex border-gray-400 justify-center' >
-                <div className='w-[95%] h-[2.5rem] flex rounded-full border border-black dark:border-gray-500'>
+                <div className='w-full h-[2.6rem] flex rounded-full border border-black dark:border-gray-500'>
                     <textarea
                         type='text'
                         name='replies'
                         placeholder='Type your replies'
-                        className='chat-area'
+                        className='chat-area scrollbar-hide'
                         onKeyDown={handleKeydown}
                         required
                         ref={textRep}
                     />
-                    <button className='icon flex items-center px-4 cursor-pointer' disabled={loadingRep} onClick={handleSubmit}>
+                    <button className='icon flex items-center sm:px-4 px-3 cursor-pointer' disabled={loadingRep} onClick={handleSubmit}>
                         {loadingRep ? <FiLoader className='animate-spin' /> : <BsSendFill size={20} />}
                     </button>
                 </div>

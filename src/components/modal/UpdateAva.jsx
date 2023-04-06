@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { useDropzone } from 'react-dropzone'
 import { toBase64 } from '@/helper'
@@ -6,6 +6,7 @@ import { FaImage } from 'react-icons/fa'
 import { FiLoader } from 'react-icons/fi'
 import { UPDATE_USER } from '@/graphql'
 import { useMutation } from '@apollo/client'
+import { toast } from 'react-toastify'
 
 function UpdateAva({ user, modal, setModal }) {
     const [ava, setAva] = useState({ file: '', url: user.ava })
@@ -23,6 +24,7 @@ function UpdateAva({ user, modal, setModal }) {
     useEffect(() => {
         if (data) {
             setModal({ ...modal, open: false })
+            toast.success('update avatar success')
         }
     }, [data])
     const handleSubmit = async () => {
@@ -53,12 +55,12 @@ function UpdateAva({ user, modal, setModal }) {
                         </div>
                     </div>
                     <div>
-                        <img src={ava?.url} alt="ava" className="w-[60%] mx-auto rounded-full dark:bg-gray-500 aspect-square" loading='lazy' />
+                        <img src={ava?.url} alt="ava" className="w-[50%] mx-auto rounded-full dark:bg-gray-500 aspect-square" loading='lazy' />
                     </div>
                 </div>
                 <div className='w-full mt-5 flex justify-center'>
                     <button type='submit' className='w-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-md py-3 text-gray-50 text-lg' onClick={() => handleSubmit()}>
-                        {false ? <FiLoader className='animate-spin mx-auto' size={20} /> : 'Update'}
+                        {loading ? <FiLoader className='animate-spin mx-auto' size={20} /> : 'Update'}
                     </button>
                 </div>
             </div>

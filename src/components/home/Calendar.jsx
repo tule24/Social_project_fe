@@ -53,12 +53,7 @@ function Calendar() {
                     {selectDate.toDate().toDateString()} <span className='text-sm font-thin'>(4 events)</span>
                 </h1>
                 <div className='space-y-2'>
-                    {/* <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🥳  Birthday of Nathan Lee</p>
-                    <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🎇  Birthday of Nathan Lee</p>
-                    <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🥳  Birthday of Nathan Lee</p>
-                    <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🎇  Birthday of Nathan Lee</p>
-                    <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🥳  Birthday of Nathan Lee</p>
-                    <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🎇  Birthday of Nathan Lee</p> */}
+                    {/* <p className="text-gray-700 p-2 my-shadow rounded-md dark:bg-zinc-700 dark:text-gray-400">🥳  Birthday of Nathan Lee</p> */}
                 </div>
             </div>
         </div>

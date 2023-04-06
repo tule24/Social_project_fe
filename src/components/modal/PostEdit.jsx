@@ -75,22 +75,23 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
   }, [])
 
   return (
-    <div className='w-full h-full bg-gray-200 rounded-lg overflow-hidden grid grid-cols-2'>
-      <div className='bg-gray-300 p-5 overflow-auto'>
-        <h1 className='text-center text-3xl font-semibold tracking-widest'>{post ? 'UPDATE POST' : 'CREATE NEW POST'}</h1>
-        <div className='mt-10 space-y-5'>
+    <div className='w-full h-full rounded-lg overflow-hidden grid sm:grid-cols-2 grid-cols-1'>
+      <div className='bg-gray-300 dark:bg-zinc-700 p-5 overflow-auto text-black dark:text-white relative custom-bar'>
+        <h1 className='text-center sm:text-3xl text-xl font-semibold tracking-widest'>{post ? 'UPDATE POST' : 'CREATE NEW POST'}</h1>
+        <button className='sm:hidden absolute right-2 top-2' onClick={() => setModal({ ...modal, open: false })}><AiOutlineCloseCircle size={30} /></button>
+        <div className='sm:mt-10 mt-5 sm:space-y-5 space-y-2'>
           <div className='space-y-2'>
-            <h1 className='text-xl font-semibold'>Content <span className='text-sm'>(required)</span></h1>
+            <h1 className='sm:text-xl font-semibold'>Content <span className='text-sm'>(required)</span></h1>
             <ReactQuill theme='snow' value={content} onChange={setContent} className='bg-white rounded-lg' placeholder='Input your content...' />
           </div>
           <div className='space-y-2'>
-            <h1 className='text-xl font-semibold'>Media</h1>
+            <h1 className='sm:text-xl font-semibold'>Media</h1>
             <div {...getRootProps()} className='cursor-pointer'>
               <input {...getInputProps()} />
-              <div className='w-full flex flex-col items-center justify-center space-y-2 py-5 rounded-lg border-2 border-dashed border-gray-400'>
+              <div className='sm:text-base text-sm w-full flex flex-col items-center justify-center space-y-2 py-5 rounded-lg border-2 border-dashed border-gray-400'>
                 <p>JPG, PNG, WEBM, MAX 100MB</p>
                 <div>
-                  <FaImage size={80} className='text-gray-200'/>
+                  <FaImage className='text-gray-200 sm:text-[80px] text-[40px]'/>
                 </div>
                 <p>Drag & drop file</p>
                 <p>or Browse media on your device</p>
@@ -98,7 +99,7 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
             </div>
             <div className='grid grid-cols-4 gap-2'>
               {files.map((el, i) => {
-                return <div className='bg-gray-100 rounded-lg overflow-hidden'>
+                return <div className='bg-gray-100 rounded-lg overflow-hidden' key={el.url}>
                   <div className='flex items-center justify-end p-1' key={i}>
                     <button onClick={() => removeImage(el.file.name)}><AiOutlineClose /></button>
                   </div>
@@ -116,10 +117,10 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
             </div>
           </div>
           <div>
-            <h1 className='text-xl font-semibold'>Vision</h1>
+            <h1 className='sm:text-xl font-semibold'>Vision</h1>
             <div className='my-2'>
               <select
-                className=" rounded-lg p-2 w-1/2"
+                className=" rounded-lg p-2 w-1/2 focus:outline-none focus:border-none text-black"
                 value={vision}
                 name='vision'
                 onChange={(e) => setVision(e.target.value)}
@@ -133,8 +134,8 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
             <div className='flex space-x-5 mt-5 justify-end relative'>
               {post && (
                 loadingDel
-                  ? <button disabled className='px-3 py-2 rounded-lg my-shadow bg-red-500 font-semibold text-white flex items-center'>WAITING <FiLoader className='ml-2 animate-spin' size={20} /></button>
-                  : <button onClick={() => setOpenConfirm(true)} className='px-3 py-2 rounded-lg my-shadow bg-red-500 font-semibold text-white flex items-center'>
+                  ? <button disabled className='sm:px-3 sm:py-2 sm:text-base px-2 py-1 text-[10px] rounded-lg my-shadow bg-red-500 font-semibold text-white flex items-center'>WAITING <FiLoader className='ml-2 animate-spin' size={20} /></button>
+                  : <button onClick={() => setOpenConfirm(true)} className='sm:px-3 sm:py-2 sm:text-base px-2 py-1 text-[10px] rounded-lg my-shadow bg-red-500 font-semibold text-white flex items-center'>
                     DELETE POST <AiOutlineDelete className='ml-2' size={20} />
                   </button>
               )}
@@ -149,15 +150,15 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
                 </div>
               }
               {loadingCreate
-                ? <button disabled className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>WAITING <FiLoader className='ml-2 animate-spin' size={20} /></button>
-                : <button onClick={() => handleSubmit()} className='px-3 py-2 rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>{post ? 'UPDATE' : 'CREATE'} POST <AiOutlineFileAdd className='ml-2' size={20} /></button>
+                ? <button disabled className='sm:px-3 sm:py-2 sm:text-base px-2 py-1 text-[10px] rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>WAITING <FiLoader className='ml-2 animate-spin' size={20} /></button>
+                : <button onClick={() => handleSubmit()} className='sm:px-3 sm:py-2 sm:text-base px-2 py-1 text-[10px] rounded-lg my-shadow bg-blue-500 font-semibold text-white flex items-center'>{post ? 'UPDATE' : 'CREATE'} POST <AiOutlineFileAdd className='ml-2' size={20} /></button>
               }
             </div>
           </div>
         </div>
       </div>
-      <div className='bg-gray-200 overflow-auto border-l-2 border-gray-300'>
-        <div className="flex flex-col w-full h-full p-6 space-y-5 rounded-lg dark:bg-zinc-800 dark:text-gray-100 overflow-auto">
+      <div className='bg-gray-200 dark:bg-zinc-700 overflow-auto border-l-2 border-gray-200 dark:border-gray-600 sm:block hidden'>
+        <div className="flex flex-col w-full h-full p-6 space-y-5 rounded-lg dark:bg-zinc-800 dark:text-gray-100 overflow-auto custom-bar">
           <div className='flex justify-between items-start h-[8%]'>
             <div className="flex space-x-4">
               <img alt="" src={user.ava} className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500" />
@@ -168,7 +169,7 @@ function PostEdit({ user, modal, setModal, post, createPost, updatePost, deleteP
             </div>
             <button onClick={() => setModal({ ...modal, open: false })}><AiOutlineCloseCircle size={30} /></button>
           </div>
-          <div className='overflow-auto h-[82%]'>
+          <div className='overflow-auto h-[82%] custom-bar'>
             <div className='my-2 w-full break-words'>
               {parse(content)}
             </div>

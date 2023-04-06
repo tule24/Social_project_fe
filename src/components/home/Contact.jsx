@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { AiFillMessage } from 'react-icons/ai'
+import React, { useContext, useState } from 'react'
 import { MdFiberNew } from 'react-icons/md'
 import { SiMessenger } from 'react-icons/si'
 import { SocialContext } from '@/context'
@@ -22,14 +21,15 @@ function Contact() {
             setMessageRoom([...messageRoom])
         }
     }
+    const [filter, setFilter] = useState('')
     return (
-        <div className='fixed space-y-4 h-screen right-0 top-[6rem] w-[20%] px-3 text-gray-800 dark:text-gray-100 shadow-xl'>
+        <div className='layout-parent-right'>
             <div className='font-semibold tracking-widest flex items-center'>
-                <h1 className='text-3xl '>Contacts</h1>
-                <Link to={"/chat"} className="ml-3 p-3 rounded-full bg-gray-300 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><SiMessenger /></Link>
+                <h1 className='text-3xl lg:block hidden'>Contacts</h1>
+                <Link to={"/chat"} className="ml-0 lg:ml-3 p-3 rounded-full bg-gray-300 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-gray-500"><SiMessenger /></Link>
             </div>
             <label htmlFor="Search" className="hidden">Search</label>
-            <div className="relative w-full">
+            <div className="relative w-full lg:block hidden">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-2">
                     <button type="button" title="search" className="p-1 focus:outline-none focus:ring">
                         <svg fill="currentColor" viewBox="0 0 512 512" className="w-4 h-4 text-gray-500 dark:text-gray-100">
@@ -41,27 +41,28 @@ function Contact() {
                     type="search"
                     name="Search"
                     placeholder="Search..."
-                    className="w-full py-2 pl-10 text-sm border border-gray-300 dark:border-zinc-700 rounded-full focus:outline-none bg-gray-200 dark:bg-zinc-700 text-gray-100 focus:text-black dark:focus:text-gray-300 focus:bg-gray-300 dark:focus:bg-gray-600 focus:border-violet-400" />
+                    className="w-full rounded-full my-input"
+                    onChange={e => setFilter(e.target.value)}
+                />
             </div>
-            <div className='space-y-6'>
-                {messageRoom?.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map((el, i) => {
+            <div className='space-y-6 overflow-y-auto h-[75vh] scrollbar-hide'>
+                {messageRoom?.filter(el => el.user.name.includes(filter)).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).map((el, i) => {
                     return <div className='flex items-center justify-between' key={el.id}>
                         <div className='flex items-center '>
                             <div className="relative flex-shrink-0">
                                 <span className={`absolute bottom-0 right-0 w-3 h-3 border rounded-full text-gray-100 border-gray-900 bg-green-400`} />
-                                <img src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-300 border-gray-400" />
+                                <img src={el.user.ava} alt="ava" className="w-10 h-10 border rounded-full bg-gray-300 border-gray-400 cursor-pointer" onClick={() => handleOpenChat(el, i)} />
                             </div>
-                            <div className='flex flex-col'>
+                            <div className='lg:flex flex-col hidden'>
                                 <span className='font-semibold ml-2 capitalize cursor-pointer hover:underline flex' onClick={() => handleOpenChat(el, i)}>
                                     {el.user.name}
                                     {el.newMessage && <MdFiberNew className='text-red-500' />}
                                 </span>
-                                <span className={`ml-2 text-[12px] ${el.newMessage ? 'text-black font-semibold' : 'text-gray-500'}`}>{el?.lastMessage?.content ? minifyText(el.lastMessage.content, 15) : 'Send message!'}</span>
+                                <span className={`ml-2 text-[12px] ${el.newMessage ? 'text-black dark:text-white font-semibold' : 'text-gray-500'}`}>{el?.lastMessage?.content ? minifyText(el.lastMessage.content, 12) : 'Send message!'}</span>
                             </div>
                         </div>
-                        <div className='contact-format text-xl space-x-2 '>
-                            <span className='text-[10px]'>{formatTime(el.updatedAt)}</span>
-                            <AiFillMessage className='contact-btn' onClick={() => handleOpenChat(el)} />
+                        <div className='contact-format text-xl'>
+                            <span className='text-[10px] dark:text-gray-500'>{formatTime(el.updatedAt)}</span>
                         </div>
                     </div>
                 })}
