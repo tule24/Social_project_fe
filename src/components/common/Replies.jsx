@@ -5,9 +5,10 @@ import { CmtRep, QueryResult, CommentSkeleton } from '@/components'
 import { BsSendFill } from 'react-icons/bs'
 import { createRepliesService, updateRepliesService, deleteRepliesService, likeRepliesService, unlikeRepliesService } from '@/services'
 import { FiLoader } from 'react-icons/fi'
+import { TbRefresh } from 'react-icons/tb'
 
 function Replies({ commentId, totalReplies }) {
-    const { loading, error, data } = useQuery(REPLIES_OF_COMMENT, { variables: { commentId } })
+    const { loading, error, data, refetch, networkStatus } = useQuery(REPLIES_OF_COMMENT, { variables: { commentId }, notifyOnNetworkStatusChange: true })
     const [createReplies] = useMutation(CREATE_REPLIES)
     const [updateReplies] = useMutation(UPDATE_REPLIES)
     const [deleteReplies] = useMutation(DELETE_REPLIES)
@@ -32,9 +33,10 @@ function Replies({ commentId, totalReplies }) {
     }
 
     return (
-        <div className='mt-2'>
+        <div className='mt-2 relative'>
+            <button className='absolute right-0 cursor-pointer z-10 text-gray-500 dark:text-gray-400 hover:text-black' title='refresh' onClick={() => refetch()}><TbRefresh size={15}/></button>
             {totalReplies > 0
-                ? <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />}>
+                ? <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />} networkStatus={networkStatus}>
                     {data?.repliesOfComment?.map(el => <CmtRep
                         key={el.id}
                         parentId={commentId}
@@ -53,7 +55,7 @@ function Replies({ commentId, totalReplies }) {
                 : ''
             }
             <div className='flex border-gray-400 justify-center' >
-                <div className='w-full h-[2.6rem] flex rounded-full border border-black dark:border-gray-500'>
+                <div className='w-full h-[2.5rem] flex rounded-full border border-black dark:border-gray-500'>
                     <textarea
                         type='text'
                         name='replies'

@@ -10,6 +10,11 @@ function HomeLayout() {
   const { miniChat, setMiniChat, messageRoom, setMessageRoom, userInfo } = useContext(SocialContext)
   const closeChat = (id) => {
     const newMiniChat = miniChat.filter(el => el.id !== id)
+    const index = messageRoom.findIndex(room => room.id === id)
+    if(index >= 0) {
+      messageRoom[index].newMessage = false
+      setMessageRoom([...messageRoom])
+    }
     setMiniChat([...newMiniChat])
   }
 

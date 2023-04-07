@@ -2,12 +2,12 @@ import { Contact, Post, Weather, Calendar, QueryResult, PostSkeleton } from '@/c
 import { SocialContext } from '@/context'
 import { POST_FOR_USER } from '@/graphql'
 import { useQuery } from '@apollo/client'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { HiOutlineInbox } from 'react-icons/hi'
 
 function Home() {
-    const { loading, error, data, fetchMore } = useQuery(POST_FOR_USER, { variables: { page: 1 } })
-    const { userInfo } = useContext(SocialContext)
+    const { loading, error, data, fetchMore, refetch } = useQuery(POST_FOR_USER, { variables: { page: 1 }})
+    const { userInfo, isRefetch, setIsRefetch } = useContext(SocialContext)
     const [isEnd, setIsEnd] = useState(false)
     const handleScroll = ({ currentTarget }) => {
         if (currentTarget.scrollTop + currentTarget.clientHeight >= currentTarget.scrollHeight) {
@@ -31,6 +31,14 @@ function Home() {
             }
         }
     }
+
+    useEffect(() => {
+        if (isRefetch) {
+            refetch()
+            setIsRefetch(false)
+            setIsEnd(false)
+        }
+    }, [isRefetch])
 
     return (
         <div className='layout-parent' onScroll={handleScroll}>

@@ -8,7 +8,7 @@ import { createMessageService, messageSubService } from '@/services'
 import { FiLoader } from 'react-icons/fi'
 
 function MiniChat({ room, closeChat, userId }) {
-  const { subscribeToMore, loading, error, data, fetchMore } = useQuery(GET_MESSAGE_ROOM, { variables: { roomId: room.id, page: 1 } })
+  const { subscribeToMore, loading, error, data } = useQuery(GET_MESSAGE_ROOM, { variables: { roomId: room.id, page: 1 } })
   const [createMessage] = useMutation(CREATE_MESSAGE)
   const [loadingMessage, setLoadingMessage] = useState(false)
   const [msgData, setMsgData] = useState([])
@@ -47,7 +47,7 @@ function MiniChat({ room, closeChat, userId }) {
         </div>
         <GrClose size={20} className='cursor-pointer' onClick={() => closeChat(room.id)} />
       </div>
-      <div className='flex-grow overflow-auto p-2 space-y-5 relative'>
+      <div className='flex-grow overflow-auto p-2 space-y-5 relative custom-bar'>
         <QueryResult loading={loading} error={error} data={data} skeleton={<LoadingSpiner />}>
           {msgData?.map(el => {
             return el.creator.id !== userId ? (
@@ -56,7 +56,7 @@ function MiniChat({ room, closeChat, userId }) {
                 <div className='max-w-[50%] space-y-1 flex flex-col items-start'>
                   {el.content.map(msg => {
                     return (
-                      <p title={msg.createdAt} className='bg-slate-200 py-1 px-2 rounded-md break-all' key={msg.createdAt}>
+                      <p title={msg.createdAt} className='bg-slate-200 py-1 px-2 rounded-md break-words' key={msg.createdAt}>
                         {msg.message}
                       </p>
                     )
@@ -68,7 +68,7 @@ function MiniChat({ room, closeChat, userId }) {
                 <div className='max-w-[50%] space-y-1 flex flex-col items-end'>
                   {el.content.map(msg => {
                     return (
-                      <p title={msg.createdAt} className='bg-blue-500  py-1 px-2 rounded-md break-all' key={msg.createdAt}>
+                      <p title={msg.createdAt} className='bg-blue-500  py-1 px-2 rounded-md break-words' key={msg.createdAt}>
                         {msg.message}
                       </p>
                     )

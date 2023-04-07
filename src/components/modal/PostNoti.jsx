@@ -15,7 +15,7 @@ function PostNoti({ modal, setModal, postId, user }) {
     const [post, setPost] = useState(null)
     const [comment, setComment] = useState(null)
     const queryPost = useQuery(POST_BY_ID, { variables: { postId } })
-    const queryComment = useQuery(COMMENT_OF_POST, { variables: { postId, page: 1 } })
+    const queryComment = useQuery(COMMENT_OF_POST, { variables: { postId, page: 1 }, notifyOnNetworkStatusChange: true })
 
     useEffect(() => {
         if (queryPost.data) {
@@ -58,7 +58,7 @@ function PostNoti({ modal, setModal, postId, user }) {
 
     return (
         <div className='w-full h-full bg-gray-200 grid grid-cols-[1.5fr_1fr] rounded-lg overflow-hidden'>
-            <div className='bg-gray-200 dark:bg-zinc-800 overflow-auto border-r-2 border-gray-300 dark:border-gray-500'>
+            <div className='bg-gray-200 dark:bg-zinc-800 overflow-auto border-r-2 border-gray-300 dark:border-gray-500 custom-bar'>
                 <QueryResult loading={queryPost.loading} error={queryPost.error} data={queryPost.data} skeleton={<LoadingSpiner />}>
                     <div className="flex flex-col w-full p-6 space-y-5 overflow-hidden rounded-lg dark:bg-zinc-800 dark:text-gray-100">
                         <div className='flex justify-between items-start'>
@@ -96,9 +96,10 @@ function PostNoti({ modal, setModal, postId, user }) {
                     </div>
                 </QueryResult>
             </div>
-            <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white'>
-                <div className='flex flex-col space-y-2 w-full p-5 overflow-auto'>
-                    <QueryResult loading={queryComment.loading} error={queryComment.error} data={queryComment.data} skeleton={<CommentSkeleton />}>
+            <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white relative'>
+                <button className='absolute right-1 top-1 text-gray-500 dark:text-gray-400 hover:text-black' title='refresh' onClick={() => queryComment.refetch()}><TbRefresh size={15} /></button>
+                <div className='flex flex-col space-y-2 w-full p-5 overflow-auto custom-bar'>
+                    <QueryResult loading={queryComment.loading} error={queryComment.error} data={queryComment.data} skeleton={<CommentSkeleton />} networkStatus={queryComment.networkStatus}>
                         {comment?.map(el => <CmtRep
                             key={el.id}
                             parentId={postId}

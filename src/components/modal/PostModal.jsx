@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { BsSendFill } from 'react-icons/bs'
 import { AiFillLike, AiOutlineComment, AiOutlineCloseCircle, AiOutlineLike } from 'react-icons/ai'
 import { GiEarthAmerica } from 'react-icons/gi'
+import { TbRefresh } from 'react-icons/tb'
 import parse from 'html-react-parser'
 import { QueryResult, Slider, CommentSkeleton, CmtRep } from '@/components'
 import { useQuery, useMutation } from '@apollo/client'
@@ -13,7 +14,7 @@ import { FaUserLock, FaUsers } from 'react-icons/fa'
 
 function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost, unlikePost, setLiked, setTotalLike }) {
     const { id, content, media, vision, updatedAt } = post
-    const { loading, error, data, fetchMore } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 } })
+    const { loading, error, data, fetchMore, refetch, networkStatus } = useQuery(COMMENT_OF_POST, { variables: { postId: id, page: 1 }, notifyOnNetworkStatusChange: true })
     const [createComment] = useMutation(CREATE_COMMENT)
     const [updateComment] = useMutation(UPDATE_COMMENT)
     const [deleteComment] = useMutation(DELETE_COMMENT)
@@ -121,9 +122,10 @@ function PostModal({ modal, setModal, post, creator, liked, totalLike, likePost,
                     </div>
                 </div>
             </div>
-            <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white'>
+            <div className='bg-gray-300 dark:bg-zinc-700 flex flex-col justify-between overflow-auto dark:text-white relative'>
+                <button className='absolute right-1 top-1 text-gray-500 dark:text-gray-400 hover:text-black' title='refresh' onClick={() => refetch()}><TbRefresh size={15}/></button>
                 <div className='flex flex-col space-y-2 w-full p-5 overflow-auto custom-bar'>
-                    <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />}>
+                    <QueryResult loading={loading} error={error} data={data} skeleton={<CommentSkeleton />} networkStatus={networkStatus}>
                         {data?.commentOfPost?.map(el => <CmtRep
                             key={el.id}
                             parentId={post.id}

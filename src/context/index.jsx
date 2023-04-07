@@ -4,6 +4,7 @@ export const SocialProvider = (({ children }) => {
     const [userInfo, setUserInfo] = useState()
     const [messageRoom, setMessageRoom] = useState([])
     const [miniChat, setMiniChat] = useState([])
+    const [isRefetch, setIsRefetch] = useState(false)
     const [modal, setModal] = useState({
         open: false,
         component: ""
@@ -36,6 +37,8 @@ export const SocialProvider = (({ children }) => {
                 miniChat,
                 messageRoom,
                 loading,
+                isRefetch,
+                setIsRefetch,
                 setLoading,
                 setMessageRoom,
                 setUserInfo,

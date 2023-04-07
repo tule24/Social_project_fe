@@ -4,6 +4,7 @@ import { SiSocialblade } from 'react-icons/si'
 import { BsBellFill, BsPencilSquare } from 'react-icons/bs'
 import { MdFiberNew, MdLightMode, MdNightlight, MdLogout } from 'react-icons/md'
 import { FaUserFriends, FaUser } from 'react-icons/fa'
+import { TbRefresh } from 'react-icons/tb'
 import { Tooltip, PostEdit, Notification } from '@/components'
 import { SocialContext } from '@/context'
 import { GET_OWNER_INFO, CREATE_POST, NOTIFICATION_SUBSCRIPTION, LOGOUT } from '@/graphql'
@@ -15,7 +16,7 @@ function Header() {
     const { loading, error, data } = useQuery(GET_OWNER_INFO)
     const [logout] = useMutation(LOGOUT)
     const [createPost] = useMutation(CREATE_POST)
-    const { setModal, modal, handleInit, userInfo } = useContext(SocialContext)
+    const { setModal, modal, handleInit, userInfo, setIsRefetch } = useContext(SocialContext)
     const [theme, setTheme] = useState('')
     const [openNoti, setOpenNoti] = useState(false)
     const [isNewNoti, setIsNewNoti] = useState(false)
@@ -85,6 +86,9 @@ function Header() {
                     </div>
                 </div>
                 <div className="items-center flex-shrink-0 sm:flex space-x-3 relative hidden">
+                    <Tooltip message={"Refetch"} position={"-left-3"}>
+                        <button className="header-btn" onClick={() => setIsRefetch(true)}><TbRefresh /></button>
+                    </Tooltip>
                     <Tooltip message={"Create Post"} position={"-left-5"}>
                         <button
                             className="header-btn"
@@ -124,6 +128,7 @@ function Header() {
                 </div>
                 <div className="sm:hidden flex items-center space-x-2">
                     <Link to={'/profile'}>{userInfo?.ava ? <img src={userInfo?.ava} alt="ava" className='w-7 rounded-full' /> : <FaUser />}</Link>
+                    <button className="header-btn" onClick={() => setIsRefetch(true)}><TbRefresh /></button>
                     <button onClick={() => handleClickNoti()}>
                         <BsBellFill />
                         {isNewNoti && <MdFiberNew className='text-red-500 absolute top-0 right-0 text-lg' />}

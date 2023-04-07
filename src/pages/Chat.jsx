@@ -1,6 +1,5 @@
-import { BigChat, Header, HOCModal } from '@/components'
+import { BigChat } from '@/components'
 import React, { useContext, useRef, useState } from 'react'
-import { ToastContainer } from 'react-toastify'
 import { BsClockHistory, BsSendFill } from 'react-icons/bs'
 import { SocialContext } from '@/context'
 import { FiLoader } from 'react-icons/fi'

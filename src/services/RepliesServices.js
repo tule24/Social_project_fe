@@ -18,7 +18,7 @@ export const createRepliesService = (commentId, content, setLoadingRep) => {
                     query: REPLIES_OF_COMMENT,
                     variables: { commentId, page: 1 },
                     data: {
-                        repliesOfComment: [{ ...data.createReplies, liked: false }, ...repliesOfCommentCache.repliesOfComment]
+                        repliesOfComment: [...repliesOfCommentCache.repliesOfComment, { ...data.createReplies, liked: false }]
                     }
                 })
             }
