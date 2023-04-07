@@ -9,9 +9,9 @@ import { REFRESHTOKEN } from '@/graphql'
 import Cookies from 'universal-cookie'
 
 const cookies = new Cookies()
-let httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' })
+let httpLink = new HttpLink({ uri: 'https://social-be.onrender.com/graphql' })
 const wsLink = new GraphQLWsLink(createClient({
-  url: 'ws://localhost:4000/graphql',
+  url: 'ws://social-be.onrender.com/graphql',
   connectionParams: {
     headers: {
       authorization: `Bearer ${cookies.get('refreshToken')}`

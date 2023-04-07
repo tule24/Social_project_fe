@@ -79,6 +79,10 @@ function Login() {
                     >Anna <HiStar className='absolute top-0 right-0 text-orange-300' /></button>
                     <button
                         className='btn-login'
+                        onClick={() => handleLogin({ email: 'betty@gmail.com', password: '123456' })}
+                    >Betty</button>
+                    <button
+                        className='btn-login'
                         onClick={() => handleLogin({ email: 'will@gmail.com', password: '123456' })}
                     >Will</button>
                     <button
@@ -94,9 +98,9 @@ function Login() {
                         onClick={() => handleLogin({ email: 'john@gmail.com', password: '123456' })}
                     >John</button>
                     <button
-                        className='btn-login'>John</button>
-                    <button
-                        className='btn-login'>John</button>
+                        className='btn-login'
+                        onClick={() => handleLogin({ email: 'danny@gmail.com', password: '123456' })}
+                    >Danny</button>
                 </div>
             </div>
 
