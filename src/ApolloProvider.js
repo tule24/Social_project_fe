@@ -11,7 +11,7 @@ import Cookies from 'universal-cookie'
 const cookies = new Cookies()
 let httpLink = new HttpLink({ uri: 'https://social-be.onrender.com/graphql' })
 const wsLink = new GraphQLWsLink(createClient({
-  url: 'ws://social-be.onrender.com/graphql',
+  url: 'wss://social-be.onrender.com/graphql',
   connectionParams: {
     headers: {
       authorization: `Bearer ${cookies.get('refreshToken')}`
