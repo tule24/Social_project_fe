@@ -57,7 +57,7 @@ function Chat() {
                         <div className='flex items-center space-x-2'>
                             <img src={el.user.ava} alt="ava" className='rounded-full w-10 h-10' key={el.user.ava} />
                             <div className='flex flex-col'>
-                                <p className='font-semibold capitalize text-white'>{el.user.name} {el.newMessage && <MdFiberNew className='text-red-500' />}</p>
+                                <p className='font-semibold capitalize dark:text-white'>{el.user.name} {el.newMessage && <MdFiberNew className='text-red-500' />}</p>
                                 <p className={`text-sm ${el.newMessage ? 'text-black dark:text-white font-semibold' : 'text-gray-400'}`}>{el?.lastMessage?.content || 'Send message!'}</p>
                             </div>
                         </div>

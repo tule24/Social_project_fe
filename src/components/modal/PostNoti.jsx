@@ -10,6 +10,7 @@ import { FiLoader } from 'react-icons/fi'
 import { createCommentService, deleteCommentService, updateCommentService, likeCommentService, unlikeCommentService, likePostService, unlikePostService } from '@/services'
 import { formatTime } from '@/helper'
 import { FaUserLock, FaUsers } from 'react-icons/fa'
+import { TbRefresh } from 'react-icons/tb'
 
 function PostNoti({ modal, setModal, postId, user }) {
     const [post, setPost] = useState(null)
